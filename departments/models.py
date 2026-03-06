@@ -1,7 +1,15 @@
 from django.db import models
 
 class Department(models.Model):
-    name = models.CharField(max_length=100)
+    department_name = models.CharField(max_length=200)
+    department_head = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='headed_departments'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return self.name
+        return self.department_name
