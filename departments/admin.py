@@ -1,4 +1,9 @@
 from django.contrib import admin
 from .models import Department
 
-admin.site.register(Department)
+
+@admin.register(Department)
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ('department_name', 'department_head', 'created_at')
+    search_fields = ('department_name',)
+    list_filter = ('created_at',)
