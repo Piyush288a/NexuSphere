@@ -21,7 +21,7 @@
 
 ### 2. Department Head
 - **Workspace Code:** `CS`
-- **Username:** `dept_head_cs`
+- **Username:** `dept_head`
 - **Password:** `dept123`
 - **Role:** Department Head
 - **Department:** Computer Science
@@ -30,7 +30,7 @@
 
 ### 3. Project Lead
 - **Workspace Code:** `CS`
-- **Username:** `lead_cs`
+- **Username:** `project_lead`
 - **Password:** `lead123`
 - **Role:** Project Lead
 - **Department:** Computer Science
@@ -74,7 +74,7 @@ Expected: Redirect to /admin-dashboard/
 #### Test 2: Department Head Login
 ```
 Workspace: CS
-Username: dept_head_cs
+Username: dept_head
 Password: dept123
 Expected: Redirect to /department-dashboard/
 ```
@@ -82,7 +82,7 @@ Expected: Redirect to /department-dashboard/
 #### Test 3: Project Lead Login
 ```
 Workspace: CS
-Username: lead_cs
+Username: project_lead
 Password: lead123
 Expected: Redirect to /project-dashboard/
 ```
@@ -127,7 +127,7 @@ Expected Error: "Invalid workspace for this user."
 
 ### Departments
 1. **Computer Science** (Workspace: CS)
-   - Department Head: dept_head_cs
+   - Department Head: dept_head
    - Members: 4 users
 
 2. **Mechanical** (Workspace: MECH)
@@ -138,8 +138,8 @@ Expected Error: "Invalid workspace for this user."
 
 #### 1. AI Attendance System
 - **Department:** Computer Science
-- **Project Lead:** lead_cs
-- **Members:** lead_cs, member_cs
+- **Project Lead:** project_lead
+- **Members:** project_lead, member_cs
 - **Deadline:** 90 days from today
 - **Description:** Develop an AI-powered attendance tracking system using facial recognition
 - **Tasks:** 3 tasks
@@ -147,7 +147,7 @@ Expected Error: "Invalid workspace for this user."
 
 #### 2. Student Portal Redesign
 - **Department:** Computer Science
-- **Project Lead:** lead_cs
+- **Project Lead:** project_lead
 - **Members:** member_cs
 - **Deadline:** 60 days from today
 - **Description:** Modernize the student portal with improved UI/UX
@@ -164,7 +164,7 @@ Expected Error: "Invalid workspace for this user."
    - Deadline: 14 days
 
 2. **Setup Database Schema**
-   - Assigned to: lead_cs
+   - Assigned to: project_lead
    - Status: In Progress
    - Priority: High
    - Deadline: 7 days
@@ -243,11 +243,6 @@ python manage.py runserver
 ### Create Test Data
 ```bash
 python create_comprehensive_test_data.py
-```
-
-### Verify Test Data
-```bash
-python verify_test_data.py
 ```
 
 ### Access Admin Panel

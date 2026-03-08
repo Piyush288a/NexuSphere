@@ -1,458 +1,364 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - NexuSphere</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #F5F1E8;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        body::before {
-            content: '';
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(139, 115, 85, 0.1) 0%, transparent 70%);
-            top: -100px;
-            right: -100px;
-            animation: float 15s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-50px, 50px); }
-        }
-        
-        .navbar {
-            background: #FFFFFF;
-            border-bottom: 2px solid #E8E4DC;
-            padding: 16px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(44, 44, 44, 0.05);
-            position: relative;
-            z-index: 10;
-        }
-        
-        .navbar-brand {
-            font-size: 22px;
-            font-weight: 700;
-            color: #2C2C2C;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .navbar-brand::before {
-            content: '◆';
-            font-size: 20px;
-            color: #8B7355;
-        }
-        
-        .navbar-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .user-info {
-            font-size: 14px;
-            color: #4A4A4A;
-            font-weight: 500;
-        }
-        
-        .btn-logout {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #8B7355 0%, #2C2C2C 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-logout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(44, 44, 44, 0.2);
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 32px;
-            position: relative;
-            z-index: 1;
-        }
-        
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - NexuSphere{% endblock %}
+
+{% block extra_css %}
+<style>
+    body::before {
+        content: '';
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(139, 115, 85, 0.1) 0%, transparent 70%);
+        top: -100px;
+        right: -100px;
+        animation: float 15s ease-in-out infinite;
+        z-index: 0;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(-50px, 50px); }
+    }
+    
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .page-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin-bottom: 32px;
+        animation: fadeIn 0.6s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    
+    .stat-card {
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+        padding: 24px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        animation: slideUp 0.6s ease;
+        animation-fill-mode: both;
+    }
+    
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; }
+    .stat-card:nth-child(4) { animation-delay: 0.4s; }
+    
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #8B7355 0%, #2C2C2C 100%);
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(44, 44, 44, 0.12);
+        border-color: #8B7355;
+    }
+    
+    .stat-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #4A4A4A;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+    }
+    
+    .stat-value {
+        font-size: 36px;
+        font-weight: 700;
+        color: #2C2C2C;
+    }
+    
+    .content-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    
+    .info-card {
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+        padding: 24px;
+        transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(44, 44, 44, 0.12);
+    }
+    
+    .card-header {
+        font-size: 18px;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #E8E4DC;
+    }
+    
+    .task-item {
+        padding: 16px;
+        background: #F5F1E8;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-left: 4px solid #8B7355;
+    }
+    
+    .task-item:hover {
+        transform: translateX(4px);
+        background: #E8E4DC;
+    }
+    
+    .task-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2C2C2C;
+    }
+    
+    .task-badge {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .badge-pending {
+        background: #E8E4DC;
+        color: #4A4A4A;
+    }
+    
+    .badge-inprogress {
+        background: #8B7355;
+        color: white;
+    }
+    
+    .badge-completed {
+        background: #2C2C2C;
+        color: white;
+    }
+    
+    .dept-info {
+        padding: 16px;
+        background: #F5F1E8;
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .dept-info-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+    
+    .dept-info-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .dept-label {
+        font-weight: 600;
+        color: #4A4A4A;
+    }
+    
+    .dept-value {
+        font-weight: 600;
+        color: #2C2C2C;
+    }
+    
+    .table-card {
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+        padding: 24px;
+        overflow-x: auto;
+    }
+    
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .table thead {
+        background: #F5F1E8;
+    }
+    
+    .table th {
+        padding: 16px;
+        text-align: left;
+        font-size: 13px;
+        font-weight: 700;
+        color: #2C2C2C;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #E8E4DC;
+    }
+    
+    .table td {
+        padding: 16px;
+        font-size: 14px;
+        color: #4A4A4A;
+        border-bottom: 1px solid #E8E4DC;
+    }
+    
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+    
+    .table tbody tr:hover {
+        background: #F5F1E8;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #4A4A4A;
+        font-style: italic;
+    }
+    
+    @media (max-width: 768px) {
         .page-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #2C2C2C;
-            margin-bottom: 32px;
-            animation: fadeIn 0.6s ease;
+            font-size: 24px;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-        
-        .stat-card {
-            background: #FFFFFF;
-            border-radius: 12px;
-            border: 2px solid #E8E4DC;
-            padding: 24px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            animation: slideUp 0.6s ease;
-            animation-fill-mode: both;
-        }
-        
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { animation-delay: 0.3s; }
-        .stat-card:nth-child(4) { animation-delay: 0.4s; }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #8B7355 0%, #2C2C2C 100%);
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(44, 44, 44, 0.12);
-            border-color: #8B7355;
-        }
-        
-        .stat-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #4A4A4A;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
+        .stats-grid,
+        .content-grid {
+            grid-template-columns: 1fr;
         }
         
         .stat-value {
-            font-size: 36px;
-            font-weight: 700;
-            color: #2C2C2C;
+            font-size: 28px;
         }
-        
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-        
-        .info-card {
-            background: #FFFFFF;
-            border-radius: 12px;
-            border: 2px solid #E8E4DC;
-            padding: 24px;
-            transition: all 0.3s ease;
-        }
-        
-        .info-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(44, 44, 44, 0.12);
-        }
-        
-        .card-header {
-            font-size: 18px;
-            font-weight: 700;
-            color: #2C2C2C;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #E8E4DC;
-        }
-        
-        .task-item {
-            padding: 16px;
-            background: #F5F1E8;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s ease;
-            border-left: 4px solid #8B7355;
-        }
-        
-        .task-item:hover {
-            transform: translateX(4px);
-            background: #E8E4DC;
-        }
-        
-        .task-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #2C2C2C;
-        }
-        
-        .task-badge {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .badge-pending {
-            background: #E8E4DC;
-            color: #4A4A4A;
-        }
-        
-        .badge-inprogress {
-            background: #8B7355;
-            color: white;
-        }
-        
-        .badge-completed {
-            background: #2C2C2C;
-            color: white;
-        }
-        
-        .dept-info {
-            padding: 16px;
-            background: #F5F1E8;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-        
-        .dept-info-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-        
-        .dept-info-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .dept-label {
-            font-weight: 600;
-            color: #4A4A4A;
-        }
-        
-        .dept-value {
-            font-weight: 600;
-            color: #2C2C2C;
-        }
-        
-        .table-card {
-            background: #FFFFFF;
-            border-radius: 12px;
-            border: 2px solid #E8E4DC;
-            padding: 24px;
-            overflow-x: auto;
-        }
-        
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .table thead {
-            background: #F5F1E8;
-        }
-        
-        .table th {
-            padding: 16px;
-            text-align: left;
-            font-size: 13px;
-            font-weight: 700;
-            color: #2C2C2C;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid #E8E4DC;
-        }
-        
-        .table td {
-            padding: 16px;
-            font-size: 14px;
-            color: #4A4A4A;
-            border-bottom: 1px solid #E8E4DC;
-        }
-        
-        .table tbody tr {
-            transition: all 0.3s ease;
-        }
-        
-        .table tbody tr:hover {
-            background: #F5F1E8;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #4A4A4A;
-            font-style: italic;
-        }
-        
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 16px 20px;
-            }
-            
-            .container {
-                padding: 24px 20px;
-            }
-            
-            .page-title {
-                font-size: 24px;
-            }
-            
-            .stats-grid,
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stat-value {
-                font-size: 28px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="navbar-brand">NexuSphere</div>
-        <div class="navbar-right">
-            <span class="user-info">{{ user.username }} ({{ user.role }})</span>
-            <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
-        </div>
-    </nav>
-    
-    <div class="container">
-        <h1 class="page-title">Dashboard Overview</h1>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Departments</div>
-                <div class="stat-value">{{ departments_count }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Projects</div>
-                <div class="stat-value">{{ projects_count }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Tasks</div>
-                <div class="stat-value">{{ tasks_count }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Messages</div>
-                <div class="stat-value">{{ messages_count }}</div>
-            </div>
-        </div>
-        
-        <div class="content-grid">
-            <div class="info-card">
-                <div class="card-header">My Department</div>
-                {% if user.department %}
-                    <div class="dept-info">
-                        <div class="dept-info-item">
-                            <span class="dept-label">Department:</span>
-                            <span class="dept-value">{{ user.department.department_name }}</span>
-                        </div>
-                        <div class="dept-info-item">
-                            <span class="dept-label">Department Head:</span>
-                            <span class="dept-value">{{ user.department.department_head.username|default:"Not assigned" }}</span>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="empty-state">
-                        You are not assigned to any department.
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="info-card">
-                <div class="card-header">My Tasks</div>
-                {% if my_tasks %}
-                    {% for task in my_tasks %}
-                    <div class="task-item">
-                        <span class="task-title">{{ task.title }}</span>
-                        <span class="task-badge badge-{{ task.status|lower|cut:' ' }}">
-                            {{ task.status }}
-                        </span>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="empty-state">
-                        No tasks assigned to you.
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-        
-        <div class="table-card">
-            <div class="card-header">Recent Projects</div>
-            {% if recent_projects %}
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Project Name</th>
-                            <th>Department</th>
-                            <th>Project Lead</th>
-                            <th>Deadline</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for project in recent_projects %}
-                        <tr>
-                            <td><strong>{{ project.project_name }}</strong></td>
-                            <td>{{ project.department.department_name }}</td>
-                            <td>{{ project.project_lead.username|default:"Not assigned" }}</td>
-                            <td>{{ project.deadline }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <div class="empty-state">
-                    No projects available.
-                </div>
-            {% endif %}
-        </div>
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Dashboard Overview</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Departments</div>
+        <div class="stat-value">{{ departments_count }}</div>
     </div>
-</body>
-</html>
+    <div class="stat-card">
+        <div class="stat-label">Projects</div>
+        <div class="stat-value">{{ projects_count }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Tasks</div>
+        <div class="stat-value">{{ tasks_count }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Messages</div>
+        <div class="stat-value">{{ messages_count }}</div>
+    </div>
+</div>
+
+<div class="content-grid">
+    <div class="info-card">
+        <div class="card-header">My Department</div>
+        {% if user.department %}
+            <div class="dept-info">
+                <div class="dept-info-item">
+                    <span class="dept-label">Department:</span>
+                    <span class="dept-value">{{ user.department.department_name }}</span>
+                </div>
+                <div class="dept-info-item">
+                    <span class="dept-label">Department Head:</span>
+                    <span class="dept-value">{{ user.department.department_head.username|default:"Not assigned" }}</span>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                You are not assigned to any department.
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="info-card">
+        <div class="card-header">My Tasks</div>
+        {% if my_tasks %}
+            {% for task in my_tasks %}
+            <div class="task-item">
+                <span class="task-title">{{ task.title }}</span>
+                <span class="task-badge badge-{{ task.status|lower|cut:' ' }}">
+                    {{ task.status }}
+                </span>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                No tasks assigned to you.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="card-header">Recent Projects</div>
+    {% if recent_projects %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Department</th>
+                    <th>Project Lead</th>
+                    <th>Deadline</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in recent_projects %}
+                <tr>
+                    <td><strong>{{ project.project_name }}</strong></td>
+                    <td>{{ project.department.department_name }}</td>
+                    <td>{{ project.project_lead.username|default:"Not assigned" }}</td>
+                    <td>{{ project.deadline }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="empty-state">
+            No projects available.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

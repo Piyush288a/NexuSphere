@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects - NexuSphere{% endblock %}
+
+{% block extra_css %}
+<style>
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 24px;
+        margin-top: 24px;
+    }
+    
+    .project-card {
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+        padding: 24px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .project-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #8B7355 0%, #2C2C2C 100%);
+    }
+    
+    .project-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(44, 44, 44, 0.12);
+        border-color: #8B7355;
+    }
+    
+    .project-header {
+        margin-bottom: 20px;
+    }
+    
+    .project-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin-bottom: 8px;
+    }
+    
+    .project-dept {
+        font-size: 13px;
+        color: #8B7355;
+        font-weight: 600;
+    }
+    
+    .project-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .project-info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+    }
+    
+    .project-label {
+        color: #4A4A4A;
+        font-weight: 500;
+    }
+    
+    .project-value {
+        color: #2C2C2C;
+        font-weight: 600;
+    }
+    
+    .project-deadline {
+        padding: 4px 12px;
+        background: #F5F1E8;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #2C2C2C;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+    }
+    
+    .empty-state-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+    
+    .empty-state-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin-bottom: 8px;
+    }
+    
+    .empty-state-text {
+        color: #4A4A4A;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Projects</h1>
+    <p class="page-subtitle">View and manage your projects</p>
+</div>
+
+{% if projects %}
+<div class="projects-grid">
+    {% for project in projects %}
+    <a href="{% url 'project_detail' project.id %}" class="project-card">
+        <div class="project-header">
+            <h3 class="project-name">{{ project.project_name }}</h3>
+            <p class="project-dept">{{ project.department.department_name }}</p>
+        </div>
+        
+        <div class="project-info">
+            <div class="project-info-item">
+                <span class="project-label">Project Lead:</span>
+                <span class="project-value">
+                    {{ project.project_lead.username|default:"Not assigned" }}
+                </span>
+            </div>
+            <div class="project-info-item">
+                <span class="project-label">Deadline:</span>
+                <span class="project-deadline">{{ project.deadline }}</span>
+            </div>
+            <div class="project-info-item">
+                <span class="project-label">Members:</span>
+                <span class="project-value">{{ project.members_count }}</span>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-state-icon">📂</div>
+    <h3 class="empty-state-title">No Projects Found</h3>
+    <p class="empty-state-text">You don't have access to any projects yet.</p>
+</div>
+{% endif %}
+{% endblock %}

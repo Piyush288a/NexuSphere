@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ department.department_name }} - NexuSphere{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dept-header-card {
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+        padding: 32px;
+        margin-bottom: 32px;
+    }
+    
+    .dept-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin-bottom: 16px;
+    }
+    
+    .dept-meta {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+    
+    .dept-meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .dept-meta-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #4A4A4A;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .dept-meta-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2C2C2C;
+    }
+    
+    .dept-code-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        background: #F5F1E8;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #8B7355;
+        font-family: 'Courier New', monospace;
+    }
+    
+    .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin-bottom: 20px;
+    }
+    
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+    
+    .project-card {
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+        padding: 20px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(44, 44, 44, 0.12);
+        border-color: #8B7355;
+    }
+    
+    .project-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin-bottom: 12px;
+    }
+    
+    .project-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 14px;
+    }
+    
+    .project-info-item {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .project-label {
+        color: #4A4A4A;
+    }
+    
+    .project-value {
+        color: #2C2C2C;
+        font-weight: 600;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+    }
+    
+    .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    
+    .back-link {
+        display: inline-block;
+        color: #8B7355;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 24px;
+        transition: color 0.2s ease;
+    }
+    
+    .back-link:hover {
+        color: #2C2C2C;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'departments_list' %}" class="back-link">← Back to Departments</a>
+
+<div class="dept-header-card">
+    <h1 class="dept-title">{{ department.department_name }}</h1>
+    
+    <div class="dept-meta">
+        <div class="dept-meta-item">
+            <span class="dept-meta-label">Workspace Code</span>
+            <span class="dept-code-badge">{{ department.workspace_code }}</span>
+        </div>
+        <div class="dept-meta-item">
+            <span class="dept-meta-label">Department Head</span>
+            <span class="dept-meta-value">
+                {{ department.department_head.username|default:"Not assigned" }}
+            </span>
+        </div>
+        <div class="dept-meta-item">
+            <span class="dept-meta-label">Total Users</span>
+            <span class="dept-meta-value">{{ users_count }}</span>
+        </div>
+        <div class="dept-meta-item">
+            <span class="dept-meta-label">Total Projects</span>
+            <span class="dept-meta-value">{{ projects.count }}</span>
+        </div>
+    </div>
+</div>
+
+<h2 class="section-title">Projects</h2>
+
+{% if projects %}
+<div class="projects-grid">
+    {% for project in projects %}
+    <a href="{% url 'project_detail' project.id %}" class="project-card">
+        <h3 class="project-name">{{ project.project_name }}</h3>
+        <div class="project-info">
+            <div class="project-info-item">
+                <span class="project-label">Project Lead:</span>
+                <span class="project-value">
+                    {{ project.project_lead.username|default:"Not assigned" }}
+                </span>
+            </div>
+            <div class="project-info-item">
+                <span class="project-label">Deadline:</span>
+                <span class="project-value">{{ project.deadline }}</span>
+            </div>
+            <div class="project-info-item">
+                <span class="project-label">Members:</span>
+                <span class="project-value">{{ project.members.count }}</span>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-state-icon">📁</div>
+    <p>No projects in this department yet.</p>
+</div>
+{% endif %}
+{% endblock %}

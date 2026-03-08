@@ -75,8 +75,8 @@ else:
     print(f"✓ Updated Admin: {admin_user.username} (Role: {admin_user.role}, Dept: {admin_user.department.workspace_code})")
 
 # Department Head
-dept_head_cs = User.objects.create_user(
-    username='dept_head_cs',
+dept_head = User.objects.create_user(
+    username='dept_head',
     email='depthead@nexusphere.com',
     password='dept123',
     first_name='John',
@@ -84,11 +84,11 @@ dept_head_cs = User.objects.create_user(
     role='dept_head',
     department=cs_dept
 )
-print(f"✓ Created Dept Head: {dept_head_cs.username} (Role: {dept_head_cs.role}, Dept: {dept_head_cs.department.workspace_code})")
+print(f"✓ Created Dept Head: {dept_head.username} (Role: {dept_head.role}, Dept: {dept_head.department.workspace_code})")
 
 # Project Lead
-lead_cs = User.objects.create_user(
-    username='lead_cs',
+project_lead = User.objects.create_user(
+    username='project_lead',
     email='lead@nexusphere.com',
     password='lead123',
     first_name='Sarah',
@@ -96,7 +96,7 @@ lead_cs = User.objects.create_user(
     role='project_lead',
     department=cs_dept
 )
-print(f"✓ Created Project Lead: {lead_cs.username} (Role: {lead_cs.role}, Dept: {lead_cs.department.workspace_code})")
+print(f"✓ Created Project Lead: {project_lead.username} (Role: {project_lead.role}, Dept: {project_lead.department.workspace_code})")
 
 # Member
 member_cs = User.objects.create_user(
@@ -124,9 +124,9 @@ print(f"✓ Created Member: {member_mech.username} (Role: {member_mech.role}, De
 print()
 
 # Update department heads
-cs_dept.department_head = dept_head_cs
+cs_dept.department_head = dept_head
 cs_dept.save()
-print(f"✓ Assigned {dept_head_cs.username} as head of {cs_dept.department_name}")
+print(f"✓ Assigned {dept_head.username} as head of {cs_dept.department_name}")
 print()
 
 # ============================================================================
@@ -139,10 +139,10 @@ project1 = Project.objects.create(
     project_name='AI Attendance System',
     description='Develop an AI-powered attendance tracking system using facial recognition',
     department=cs_dept,
-    project_lead=lead_cs,
+    project_lead=project_lead,
     deadline=date.today() + timedelta(days=90)
 )
-project1.members.add(member_cs, lead_cs)
+project1.members.add(member_cs, project_lead)
 print(f"✓ Created Project: {project1.project_name}")
 print(f"  - Department: {project1.department.department_name}")
 print(f"  - Lead: {project1.project_lead.username}")
@@ -153,7 +153,7 @@ project2 = Project.objects.create(
     project_name='Student Portal Redesign',
     description='Modernize the student portal with improved UI/UX',
     department=cs_dept,
-    project_lead=lead_cs,
+    project_lead=project_lead,
     deadline=date.today() + timedelta(days=60)
 )
 project2.members.add(member_cs)
@@ -188,7 +188,7 @@ task2 = Task.objects.create(
     title='Setup Database Schema',
     description='Design and implement the database models for attendance tracking',
     project=project1,
-    assigned_to=lead_cs,
+    assigned_to=project_lead,
     deadline=date.today() + timedelta(days=7),
     status='In Progress',
     priority='High'
@@ -235,7 +235,7 @@ print("-" * 70)
 
 message1 = Message.objects.create(
     project=project1,
-    sender=lead_cs,
+    sender=project_lead,
     message_text='Welcome to the AI Attendance System project! Let\'s start with the database design.'
 )
 print(f"✓ Created Message in {message1.project.project_name} by {message1.sender.username}")
@@ -249,7 +249,7 @@ print(f"✓ Created Message in {message2.project.project_name} by {message2.send
 
 message3 = Message.objects.create(
     project=project2,
-    sender=lead_cs,
+    sender=project_lead,
     message_text='Great work on the dashboard mockups! They look fantastic.'
 )
 print(f"✓ Created Message in {message3.project.project_name} by {message3.sender.username}")
@@ -287,14 +287,14 @@ credentials = [
     {
         'role': 'Department Head',
         'workspace': 'CS',
-        'username': 'dept_head_cs',
+        'username': 'dept_head',
         'password': 'dept123',
         'redirect': '/department-dashboard/'
     },
     {
         'role': 'Project Lead',
         'workspace': 'CS',
-        'username': 'lead_cs',
+        'username': 'project_lead',
         'password': 'lead123',
         'redirect': '/project-dashboard/'
     },

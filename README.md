@@ -341,6 +341,330 @@ LOGIN_URL = '/login/'
 
 ---
 
+### Phase 4.5: Workspace-Based Authentication Upgrade ✅
+
+**Objective:** Enhance authentication with workspace-based login system
+
+**Workspace Authentication:**
+
+#### Enhanced Login System
+- **Three-Factor Login:**
+  - Workspace Code (Department identifier)
+  - Username
+  - Password
+- **Validation Flow:**
+  1. Verify workspace exists
+  2. Authenticate user credentials
+  3. Validate user belongs to workspace
+- **Error Messages:**
+  - "Workspace not found." - Invalid workspace code
+  - "Invalid username or password." - Wrong credentials
+  - "Invalid workspace for this user." - User not in workspace
+
+#### Department Model Enhancement
+- **New Field:** `workspace_code`
+  - CharField (max_length=20)
+  - Unique constraint
+  - Used for workspace identification
+- **Migration:** `0003_department_workspace_code`
+
+#### Role-Based Redirects
+After successful login, users are redirected based on their role:
+- **admin** → `/admin-dashboard/`
+- **dept_head** → `/department-dashboard/`
+- **project_lead** → `/project-dashboard/`
+- **member** → `/dashboard/`
+
+#### Role-Specific Dashboards
+Created dedicated dashboard templates for each role:
+- `templates/dashboards/admin_dashboard.html`
+- `templates/dashboards/department_dashboard.html`
+- `templates/dashboards/project_dashboard.html`
+- `templates/dashboard.html` (member dashboard)
+
+**Dashboard Features by Role:**
+
+##### Admin Dashboard
+- Full system overview
+- User management access
+- Department statistics
+- System-wide metrics
+- Quick links to admin panel
+
+##### Department Head Dashboard
+- Department-specific metrics
+- Team member overview
+- Department projects
+- Resource allocation view
+
+##### Project Lead Dashboard
+- Led projects overview
+- Team member status
+- Task progress tracking
+- Project deadlines
+
+##### Member Dashboard
+- Assigned tasks
+- Project participation
+- Personal statistics
+- Recent activity
+
+**UI Enhancements:**
+- Consistent beige/dark grey/white color scheme
+- Modern, sleek design
+- 3D dynamic effects
+- Floating background shapes
+- Smooth animations and transitions
+- Gradient buttons with shine effects
+- Hover effects on interactive elements
+- Inter font from Google Fonts
+
+**Color Palette:**
+- Background: #F5F1E8 (Beige)
+- Cards: #FFFFFF (White)
+- Primary Text: #2C2C2C (Dark Grey)
+- Secondary Text: #4A4A4A (Medium Grey)
+- Borders: #E8E4DC (Light Grey)
+- Accent: #8B7355 (Brown)
+- Gradients: #8B7355 to #2C2C2C
+
+---
+
+### Phase 5: Views & Templates (Departments & Projects) ✅
+
+**Objective:** Implement full CRUD views and templates for Departments and Projects
+
+**Base Template System:**
+
+#### Base Template (`templates/base.html`)
+- **Navigation Bar:**
+  - Logo/Brand name
+  - Dashboard link
+  - Departments link
+  - Projects link
+  - User info display
+  - Logout button
+- **Features:**
+  - Sticky navigation
+  - Active link highlighting
+  - Responsive design
+  - Consistent across all pages
+  - Beige background (#F5F1E8)
+  - Inter font family
+
+---
+
+**Departments Module:**
+
+#### Views (`departments/views.py`)
+
+##### departments_list
+- **URL:** `/departments/`
+- **Access:** All authenticated users
+- **Features:**
+  - Lists all departments
+  - Shows workspace code
+  - Displays department head
+  - Shows user count
+  - Shows project count
+  - Grid layout with cards
+  - Hover animations
+
+##### department_detail
+- **URL:** `/departments/<id>/`
+- **Access:** All authenticated users
+- **Features:**
+  - Department information
+  - Workspace code badge
+  - Department head details
+  - List of all projects in department
+  - User statistics
+  - Back navigation link
+  - Empty state handling
+
+#### Templates
+
+##### departments/list.html
+- Grid layout (3 columns on desktop)
+- Department cards with:
+  - Department name
+  - Workspace code badge
+  - Department head name
+  - User count
+  - Project count
+- Hover effects (lift and shadow)
+- Empty state message
+- Consistent beige/white design
+
+##### departments/detail.html
+- Department header section
+- Workspace code badge
+- Department metadata
+- Projects grid
+- Empty state for no projects
+- Back to list link
+- Responsive layout
+
+---
+
+**Projects Module:**
+
+#### Views (`projects/views.py`)
+
+##### projects_list
+- **URL:** `/projects/`
+- **Access:** Role-based
+  - **Admin:** See all projects
+  - **Dept Head:** See department projects
+  - **Project Lead:** See led projects
+  - **Member:** See assigned projects
+- **Features:**
+  - Filtered project list
+  - Shows project name
+  - Shows department
+  - Shows project lead
+  - Shows deadline
+  - Shows member count
+  - Grid layout
+
+##### project_detail
+- **URL:** `/projects/<id>/`
+- **Access:** Permission-based
+  - Admin: Full access
+  - Dept Head: Department projects
+  - Project Lead: Led projects
+  - Members: Assigned projects
+- **Features:**
+  - Project information
+  - Description
+  - Team members list
+  - Tasks list with status
+  - Access control (404 if unauthorized)
+  - Empty states
+
+#### Templates
+
+##### projects/list.html
+- Grid layout (3 columns)
+- Project cards with:
+  - Project name
+  - Department badge
+  - Project lead
+  - Deadline
+  - Member count
+  - Top gradient bar
+- Hover effects
+- Empty state message
+- Role-based content
+
+##### projects/detail.html
+- Project header with full details
+- Description section
+- Team members grid with roles
+- Tasks list with:
+  - Task title
+  - Assigned user
+  - Status badge (color-coded)
+  - Priority indicator
+- Empty states for members/tasks
+- Back to list link
+- Access-controlled content
+
+---
+
+**UI Design Consistency:**
+
+#### Design Elements
+- **Border Radius:** 12px for cards, 8px for badges
+- **Padding:** 24-32px for cards
+- **Gaps:** 20-24px in grids
+- **Transitions:** 0.3s ease for all animations
+- **Hover Effects:** translateY(-4px) with shadow
+- **Font:** Inter (Google Fonts)
+
+#### Consistent Components
+- Card hover effects
+- Badge styling (department, status, priority)
+- Empty states with icons
+- Back navigation links
+- Grid layouts (responsive)
+- Status badges (color-coded)
+- Meta information display
+
+#### Status Badge Colors
+- **Pending:** #6C757D (Grey)
+- **In Progress:** #0DCAF0 (Cyan)
+- **Completed:** #198754 (Green)
+
+#### Priority Badge Colors
+- **Low:** #6C757D (Grey)
+- **Medium:** #FFC107 (Yellow)
+- **High:** #DC3545 (Red)
+
+---
+
+**Access Control Implementation:**
+
+#### Department Access
+- All authenticated users can view departments
+- All authenticated users can view department details
+
+#### Project Access
+- **Admin:** Full access to all projects
+- **Dept Head:** Access to department projects only
+- **Project Lead:** Access to led projects
+- **Members:** Access to assigned projects only
+- **Unauthorized:** 404 error page
+
+---
+
+**Data Display:**
+
+#### Departments List
+- Department name
+- Workspace code
+- Department head
+- User count
+- Project count
+
+#### Department Detail
+- Full department information
+- All projects in department
+- User statistics
+- Department head info
+
+#### Projects List
+- Project name
+- Department name
+- Project lead
+- Deadline
+- Member count
+
+#### Project Detail
+- Project name and description
+- Department
+- Project lead
+- Deadline
+- Team members (with roles)
+- Tasks (with status and assignee)
+- Member count
+- Task count
+
+---
+
+**Test Data:**
+
+Created comprehensive test data using `create_comprehensive_test_data.py`:
+- **2 Departments:** Computer Science (CS), Mechanical (MECH)
+- **5 Users:** admin, dept_head_cs, lead_cs, member_cs, member_mech
+- **2 Projects:** AI Attendance System, Student Portal Redesign
+- **4 Tasks:** Various statuses and priorities
+- **3 Messages:** Project communications
+
+All test credentials documented in `TEST_CREDENTIALS.md`
+
+---
+
 ## 🗄 Database Models
 
 ### Entity Relationship Diagram
@@ -458,9 +782,9 @@ python manage.py createsuperuser
 ```
 Follow the prompts to create admin credentials.
 
-7. **Load test data (optional)**
+7. **Load test data**
 ```bash
-python create_test_data.py
+python create_comprehensive_test_data.py
 ```
 
 8. **Start development server**
@@ -541,10 +865,88 @@ python manage.py runserver
 
 ### Default Credentials
 
-**Superuser:**
-- Username: `admin`
-- Password: `admin123`
-- Email: `admin@nexosphere.com`
+All test users use workspace-based login (workspace_code + username + password):
+
+**Admin User:**
+- **Workspace Code:** `CS`
+- **Username:** `admin`
+- **Password:** `admin123`
+- **Role:** Admin
+- **Department:** Computer Science
+- **Redirect:** `/admin-dashboard/`
+- **Access:** Full system access, superuser privileges
+
+**Department Head:**
+- **Workspace Code:** `CS`
+- **Username:** `dept_head`
+- **Password:** `dept123`
+- **Role:** Department Head
+- **Department:** Computer Science
+- **Redirect:** `/department-dashboard/`
+- **Access:** Department management
+
+**Project Lead:**
+- **Workspace Code:** `CS`
+- **Username:** `project_lead`
+- **Password:** `lead123`
+- **Role:** Project Lead
+- **Department:** Computer Science
+- **Redirect:** `/project-dashboard/`
+- **Access:** Project management, leads 2 projects
+
+**Member (Computer Science):**
+- **Workspace Code:** `CS`
+- **Username:** `member_cs`
+- **Password:** `member123`
+- **Role:** Member
+- **Department:** Computer Science
+- **Redirect:** `/dashboard/`
+- **Access:** Basic access, assigned to 3 tasks
+
+**Member (Mechanical):**
+- **Workspace Code:** `MECH`
+- **Username:** `member_mech`
+- **Password:** `member123`
+- **Role:** Member
+- **Department:** Mechanical
+- **Redirect:** `/dashboard/`
+- **Access:** Basic access
+
+#### Test Login Scenarios
+
+**Valid Login:**
+```
+Workspace: CS
+Username: admin
+Password: admin123
+Result: Success → Redirect to /admin-dashboard/
+```
+
+**Invalid Workspace:**
+```
+Workspace: INVALID
+Username: admin
+Password: admin123
+Result: Error → "Workspace not found."
+```
+
+**Invalid Credentials:**
+```
+Workspace: CS
+Username: admin
+Password: wrongpassword
+Result: Error → "Invalid username or password."
+```
+
+**Wrong Workspace:**
+```
+Workspace: MECH
+Username: admin
+Password: admin123
+Result: Error → "Invalid workspace for this user."
+```
+
+For complete test data details, see `TEST_CREDENTIALS.md`
 
 ---
 
@@ -556,10 +958,12 @@ python manage.py runserver
 | 2 | Database Models | ✅ Complete | All models and relationships defined |
 | 3 | Admin Panel | ✅ Complete | Admin interface configured |
 | 4 | Authentication & Dashboard | ✅ Complete | Login system and dashboard implemented |
-| 5 | Views & Templates | 🔄 Pending | CRUD views for all models |
-| 6 | REST API | 🔄 Pending | API endpoints for frontend |
-| 7 | Frontend Enhancement | 🔄 Pending | Advanced UI features |
-| 8 | Real-time Chat | 🔄 Pending | WebSocket implementation |
+| 4.5 | Workspace Authentication | ✅ Complete | Workspace-based login and role dashboards |
+| 5 | Views & Templates | ✅ Complete | Departments and Projects CRUD views |
+| 6 | Task Management | 🔄 Pending | Task CRUD operations and views |
+| 7 | REST API | 🔄 Pending | API endpoints for frontend |
+| 8 | Frontend Enhancement | 🔄 Pending | Advanced UI features |
+| 9 | Real-time Chat | 🔄 Pending | WebSocket implementation |
 
 ---
 
@@ -650,33 +1054,36 @@ TEMPLATES = [{
 
 ## 🐛 Known Issues
 
-None at this time. All Phase 1-4 features are working as expected.
+None at this time. All Phase 1-5 features are working as expected.
 
 ---
 
 ## 🚀 Future Enhancements
 
-- Department-specific dashboards
-- Project detail pages
-- Task management interface
-- Real-time notifications
-- File upload for tasks
-- Advanced search and filtering
+- Task management views and forms
 - User profile pages
-- Activity logs
+- Project/task creation and editing forms
+- Real-time notifications
+- File upload for tasks and messages
+- Advanced search and filtering
+- Activity logs and audit trails
 - Email notifications
 - Export functionality (PDF, Excel)
 - Calendar view for deadlines
 - Gantt charts for projects
 - Real-time chat with WebSockets
+- Mobile app integration
+- API documentation
+- Performance optimization
 
 ---
 
 ## 👥 Contributors
 
-- **Piyush288a** - Initial development
-- Email: piyush288a@gmail.com
-- GitHub: https://github.com/Piyush288a
+- **Piyush288a** - Initial development and Phases 1-3
+- **Darshan-Dalsaniya** - Phases 4-5 implementation
+- Email: dalsaniyadarshan122@gmail.com
+- GitHub: https://github.com/Piyush288a/NexuSphere
 
 ---
 
@@ -703,6 +1110,6 @@ For issues or questions:
 ---
 
 **Last Updated:** March 8, 2026  
-**Version:** 1.0.0 (Phase 4 Complete)  
+**Version:** 1.5.0 (Phase 5 Complete)  
 **Django Version:** 6.0.1  
 **Python Version:** 3.13.0
