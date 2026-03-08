@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'nexosphere.urls'
+ROOT_URLCONF = 'nexusphere.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'nexosphere.wsgi.application'
+WSGI_APPLICATION = 'nexusphere.wsgi.application'
 
 
 # Database
