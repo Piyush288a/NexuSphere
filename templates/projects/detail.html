@@ -255,10 +255,15 @@
 </div>
 
 <div class="content-section">
-    <h2 class="section-title">Tasks</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 class="section-title" style="margin: 0; padding: 0; border: none;">Tasks</h2>
+        <a href="{% url 'task_list' project.id %}" style="padding: 10px 20px; background: linear-gradient(135deg, #8B7355 0%, #2C2C2C 100%); color: white; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.3s ease;">
+            View All Tasks
+        </a>
+    </div>
     {% if tasks %}
     <div class="tasks-list">
-        {% for task in tasks %}
+        {% for task in tasks|slice:":5" %}
         <div class="task-item">
             <div class="task-info">
                 <div class="task-title">{{ task.title }}</div>
@@ -273,6 +278,13 @@
         </div>
         {% endfor %}
     </div>
+    {% if tasks.count > 5 %}
+    <div style="text-align: center; margin-top: 16px;">
+        <a href="{% url 'task_list' project.id %}" style="color: #8B7355; text-decoration: none; font-weight: 600;">
+            View all {{ tasks_count }} tasks →
+        </a>
+    </div>
+    {% endif %}
     {% else %}
     <div class="empty-state">No tasks created yet.</div>
     {% endif %}

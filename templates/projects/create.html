@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Project - NexuSphere{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+    
+    .page-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin-bottom: 8px;
+    }
+    
+    .page-subtitle {
+        font-size: 16px;
+        color: #4A4A4A;
+    }
+    
+    .form-card {
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+        padding: 32px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .form-group {
+        margin-bottom: 24px;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #2C2C2C;
+        margin-bottom: 8px;
+    }
+    
+    .form-label.required::after {
+        content: ' *';
+        color: #DC3545;
+    }
+    
+    .form-input,
+    .form-textarea,
+    .form-select,
+    .form-select-multiple {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #E8E4DC;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        color: #2C2C2C;
+        background: #FFFFFF;
+        transition: all 0.3s ease;
+    }
+    
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus,
+    .form-select-multiple:focus {
+        outline: none;
+        border-color: #8B7355;
+        box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+    }
+    
+    .form-textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+    
+    .form-select-multiple {
+        min-height: 150px;
+    }
+    
+    .form-help {
+        font-size: 13px;
+        color: #4A4A4A;
+        margin-top: 6px;
+        font-style: italic;
+    }
+    
+    .error-message {
+        background: #FEE;
+        border: 2px solid #FCC;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 24px;
+        color: #C33;
+        font-size: 14px;
+    }
+    
+    .error-message ul {
+        margin: 8px 0 0 20px;
+        padding: 0;
+    }
+    
+    .error-message li {
+        margin-bottom: 4px;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 16px;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 2px solid #E8E4DC;
+    }
+    
+    .btn {
+        padding: 12px 32px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+        border: none;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #8B7355 0%, #2C2C2C 100%);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(44, 44, 44, 0.2);
+    }
+    
+    .btn-secondary {
+        background: #F5F1E8;
+        color: #2C2C2C;
+        border: 2px solid #E8E4DC;
+    }
+    
+    .btn-secondary:hover {
+        background: #E8E4DC;
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #4A4A4A;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 24px;
+        transition: color 0.3s ease;
+    }
+    
+    .back-link:hover {
+        color: #8B7355;
+    }
+    
+    .back-link::before {
+        content: '←';
+        font-size: 18px;
+    }
+    
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 24px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'projects_list' %}" class="back-link">Back to Projects</a>
+
+<div class="page-header">
+    <h1 class="page-title">Create New Project</h1>
+    <p class="page-subtitle">Fill in the details to create a new project</p>
+</div>
+
+<div class="form-card">
+    {% if form.non_field_errors %}
+    <div class="error-message">
+        <strong>Please correct the following errors:</strong>
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.project_name.id_for_label }}" class="form-label required">
+                {{ form.project_name.label }}
+            </label>
+            {{ form.project_name }}
+            {% if form.project_name.errors %}
+                <div class="error-message">
+                    {% for error in form.project_name.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}" class="form-label required">
+                {{ form.description.label }}
+            </label>
+            {{ form.description }}
+            <p class="form-help">Provide a clear description of the project goals and objectives</p>
+            {% if form.description.errors %}
+                <div class="error-message">
+                    {% for error in form.description.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.department.id_for_label }}" class="form-label required">
+                {{ form.department.label }}
+            </label>
+            {{ form.department }}
+            {% if form.department.errors %}
+                <div class="error-message">
+                    {% for error in form.department.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.project_lead.id_for_label }}" class="form-label required">
+                {{ form.project_lead.label }}
+            </label>
+            {{ form.project_lead }}
+            <p class="form-help">Project lead must belong to the selected department</p>
+            {% if form.project_lead.errors %}
+                <div class="error-message">
+                    {% for error in form.project_lead.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.members.id_for_label }}" class="form-label">
+                {{ form.members.label }}
+            </label>
+            {{ form.members }}
+            <p class="form-help">Hold Ctrl (Cmd on Mac) to select multiple members. All members must belong to the selected department</p>
+            {% if form.members.errors %}
+                <div class="error-message">
+                    {% for error in form.members.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.deadline.id_for_label }}" class="form-label required">
+                {{ form.deadline.label }}
+            </label>
+            {{ form.deadline }}
+            {% if form.deadline.errors %}
+                <div class="error-message">
+                    {% for error in form.deadline.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Project</button>
+            <a href="{% url 'projects_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

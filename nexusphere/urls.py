@@ -8,5 +8,6 @@ urlpatterns = [
     path('logout/', account_views.custom_logout, name='logout'),
     path('departments/', include('departments.urls')),
     path('projects/', include('projects.urls')),
+    path('tasks/', include('tasks.urls')),
     path('', include('accounts.urls')),
 ]

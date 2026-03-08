@@ -1,8 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.contrib import messages
 from django.db import models as django_models
 from .models import Project
+from .forms import ProjectForm
 
 @login_required
 def projects_list(request):
@@ -67,3 +69,28 @@ def project_detail(request, project_id):
         'tasks_count': tasks.count(),
     }
     return render(request, 'projects/detail.html', context)
+
+
+@login_required
+def project_create(request):
+    """Create a new project"""
+    user = request.user
+    
+    # Check if user has permission to create projects
+    if user.role not in ['admin', 'dept_head', 'project_lead']:
+        messages.error(request, "You don't have permission to create projects.")
+        return redirect('projects_list')
+    
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, user=user)
+        if form.is_valid():
+            project = form.save()
+            messages.success(request, f'Project "{project.project_name}" created successfully!')
+            return redirect('project_detail', project_id=project.id)
+    else:
+        form = ProjectForm(user=user)
+    
+    context = {
+        'form': form,
+    }
+    return render(request, 'projects/create.html', context)
