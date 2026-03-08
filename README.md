@@ -40,13 +40,13 @@ NexuSphere is a simplified collaboration platform prototype designed to help org
 ## 📁 Project Structure
 
 ```
-nexosphere/
+nexusphere/
 ├── manage.py
 ├── db.sqlite3
 ├── README.md
 ├── .gitignore
 │
-├── nexosphere/              # Main project configuration
+├── nexusphere/              # Main project configuration
 │   ├── settings.py          # Project settings
 │   ├── urls.py              # Root URL configuration
 │   ├── wsgi.py
@@ -91,7 +91,7 @@ nexosphere/
 **Objective:** Initialize Django project and create app structure
 
 **Completed:**
-- Django project `nexosphere` created
+- Django project `nexusphere` created
 - Five Django apps created:
   - `accounts` - User management
   - `departments` - Department management
@@ -444,7 +444,7 @@ pip install django
 
 4. **Navigate to project directory**
 ```bash
-cd nexosphere
+cd nexusphere
 ```
 
 5. **Run migrations**
