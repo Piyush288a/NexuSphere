@@ -289,4 +289,14 @@
     <div class="empty-state">No tasks created yet.</div>
     {% endif %}
 </div>
+
+<div class="content-section">
+    <h2 class="section-title">Project Communication</h2>
+    <p style="color: #4A4A4A; margin-bottom: 20px;">
+        Communicate with your team members about this project.
+    </p>
+    <a href="{% url 'project_chat' project.id %}" style="padding: 12px 24px; background: linear-gradient(135deg, #8B7355 0%, #2C2C2C 100%); color: white; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;">
+        <span style="font-size: 18px;">💬</span> Open Chat
+    </a>
+</div>
 {% endblock %}

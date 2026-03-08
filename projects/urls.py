@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from tasks import views as task_views
+from chat import views as chat_views
 
 urlpatterns = [
     path('', views.projects_list, name='projects_list'),
@@ -8,4 +9,5 @@ urlpatterns = [
     path('<int:project_id>/', views.project_detail, name='project_detail'),
     path('<int:project_id>/tasks/', task_views.task_list, name='task_list'),
     path('<int:project_id>/tasks/create/', task_views.task_create, name='task_create'),
+    path('<int:project_id>/chat/', chat_views.project_chat, name='project_chat'),
 ]

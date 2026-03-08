@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat - {{ project.project_name }} - NexuSphere{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .chat-header {
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .chat-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin-bottom: 8px;
+    }
+    
+    .chat-subtitle {
+        font-size: 14px;
+        color: #4A4A4A;
+    }
+    
+    .project-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        background: #F5F1E8;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #8B7355;
+        margin-top: 12px;
+    }
+    
+    .messages-section {
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+        padding: 24px;
+        margin-bottom: 24px;
+        min-height: 400px;
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    
+    .messages-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .message-card {
+        background: #F5F1E8;
+        border-radius: 12px;
+        border: 1px solid #E8E4DC;
+        padding: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .message-card:hover {
+        box-shadow: 0 2px 8px rgba(44, 44, 44, 0.08);
+    }
+    
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #E8E4DC;
+    }
+    
+    .message-sender {
+        font-size: 14px;
+        font-weight: 700;
+        color: #2C2C2C;
+    }
+    
+    .message-time {
+        font-size: 12px;
+        color: #4A4A4A;
+    }
+    
+    .message-text {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #2C2C2C;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin-bottom: 12px;
+    }
+    
+    .message-attachment {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: #FFFFFF;
+        border-radius: 8px;
+        border: 1px solid #E8E4DC;
+        text-decoration: none;
+        color: #8B7355;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .message-attachment:hover {
+        background: #8B7355;
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .message-attachment::before {
+        content: '📎';
+        font-size: 16px;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #4A4A4A;
+    }
+    
+    .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    
+    .empty-state-text {
+        font-size: 16px;
+    }
+    
+    .message-form-section {
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 2px solid #E8E4DC;
+        padding: 24px;
+    }
+    
+    .form-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin-bottom: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #2C2C2C;
+        margin-bottom: 8px;
+    }
+    
+    .form-textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #E8E4DC;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        color: #2C2C2C;
+        background: #FFFFFF;
+        transition: all 0.3s ease;
+        resize: vertical;
+    }
+    
+    .form-textarea:focus {
+        outline: none;
+        border-color: #8B7355;
+        box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+    }
+    
+    .form-file {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #E8E4DC;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        color: #2C2C2C;
+        background: #FFFFFF;
+        transition: all 0.3s ease;
+    }
+    
+    .form-file:focus {
+        outline: none;
+        border-color: #8B7355;
+        box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+    }
+    
+    .form-help {
+        font-size: 13px;
+        color: #4A4A4A;
+        margin-top: 6px;
+        font-style: italic;
+    }
+    
+    .btn {
+        padding: 12px 32px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+        border: none;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #8B7355 0%, #2C2C2C 100%);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(44, 44, 44, 0.2);
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #4A4A4A;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 24px;
+        transition: color 0.3s ease;
+    }
+    
+    .back-link:hover {
+        color: #8B7355;
+    }
+    
+    .back-link::before {
+        content: '←';
+        font-size: 18px;
+    }
+    
+    @media (max-width: 768px) {
+        .chat-title {
+            font-size: 22px;
+        }
+        
+        .messages-section {
+            max-height: 400px;
+        }
+        
+        .message-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <a href="{% url 'project_detail' project.id %}" class="back-link">Back to Project</a>
+    
+    <div class="chat-header">
+        <h1 class="chat-title">Project Chat</h1>
+        <p class="chat-subtitle">{{ project.project_name }}</p>
+        <span class="project-badge">{{ message_count }} message{{ message_count|pluralize }}</span>
+    </div>
+    
+    <div class="messages-section">
+        {% if chat_messages %}
+        <div class="messages-list">
+            {% for message in chat_messages %}
+            <div class="message-card">
+                <div class="message-header">
+                    <span class="message-sender">{{ message.sender.username }}</span>
+                    <span class="message-time">{{ message.created_at|date:"M d, Y - g:i A" }}</span>
+                </div>
+                <div class="message-text">{{ message.message_text }}</div>
+                {% if message.file_attachment %}
+                <a href="{{ message.file_attachment.url }}" target="_blank" class="message-attachment">
+                    {{ message.file_attachment.name|slice:"11:" }}
+                </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">💬</div>
+            <p class="empty-state-text">No messages yet. Start the conversation!</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="message-form-section">
+        <h2 class="form-title">Send Message</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.message_text.id_for_label }}" class="form-label">
+                    {{ form.message_text.label }}
+                </label>
+                {{ form.message_text }}
+                {% if form.message_text.errors %}
+                    <div style="color: #DC3545; font-size: 13px; margin-top: 6px;">
+                        {% for error in form.message_text.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.file_attachment.id_for_label }}" class="form-label">
+                    {{ form.file_attachment.label }}
+                </label>
+                {{ form.file_attachment }}
+                <p class="form-help">You can attach a file to your message (optional)</p>
+                {% if form.file_attachment.errors %}
+                    <div style="color: #DC3545; font-size: 13px; margin-top: 6px;">
+                        {% for error in form.file_attachment.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
