@@ -5,13 +5,20 @@ A Django-based collaboration platform for managing departments, projects, tasks,
 ## 📋 Table of Contents
 
 - [Overview](#overview)
+- [Key Features Summary](#key-features-summary)
 - [Technology Stack](#technology-stack)
+- [System Requirements](#system-requirements)
 - [Project Structure](#project-structure)
 - [Features Implemented](#features-implemented)
 - [Database Models](#database-models)
 - [Installation & Setup](#installation--setup)
+- [Quick Start Guide](#quick-start-guide)
 - [Usage Guide](#usage-guide)
 - [Phase Completion Status](#phase-completion-status)
+- [Security Features](#security-features)
+- [Known Issues](#known-issues)
+- [Future Enhancements](#future-enhancements)
+- [Contributors](#contributors)
 
 ---
 
@@ -23,7 +30,61 @@ NexuSphere is a simplified collaboration platform prototype designed to help org
 - Project planning and tracking
 - Task assignment and monitoring
 - Team communication through project-based messaging
+- Productivity dashboards with insights and analytics
 - User role management and access control
+
+---
+
+## 🌟 Key Features Summary
+
+### 🔐 Authentication & Security
+- Workspace-based login system (workspace_code + username + password)
+- Role-based access control (Admin, Department Head, Project Lead, Member)
+- Session management and secure logout
+- Protected routes with authentication requirements
+
+### 🏢 Department Management
+- View all departments with workspace codes
+- Department details with project listings
+- User and project count statistics
+- Department head assignment
+
+### 📁 Project Management
+- Role-based project visibility
+- Create projects with team member assignment
+- Project details with task tracking
+- Project progress visualization
+- Access control enforcement
+
+### ✅ Task Management
+- Create and assign tasks to team members
+- Task status tracking (Pending → In Progress → Completed)
+- Priority levels (Low, Medium, High)
+- Task statistics and filtering
+- Status update authorization
+
+### 💬 Team Communication
+- Project-based chat system
+- Send text messages
+- File attachment support
+- Message history with timestamps
+- Access control for project members
+
+### 📊 Productivity Dashboards
+- **Member Dashboard:** Personal tasks, projects, upcoming deadlines
+- **Admin Dashboard:** System-wide statistics and recent activity
+- **Department Head Dashboard:** Department projects and team overview
+- **Project Lead Dashboard:** Led projects with task summaries
+- Task progress tracking with visual progress bars
+- Quick action buttons for common tasks
+
+### 🎨 User Interface
+- Consistent beige/brown/dark grey color scheme
+- Inter font from Google Fonts
+- Responsive design for all screen sizes
+- Smooth animations and hover effects
+- Color-coded status and priority badges
+- Empty state handling
 
 ---
 
@@ -31,9 +92,28 @@ NexuSphere is a simplified collaboration platform prototype designed to help org
 
 - **Backend Framework:** Django 6.0.1
 - **Database:** SQLite3 (development)
-- **Frontend:** HTML, CSS, Bootstrap 5.3.0
+- **Frontend:** HTML, CSS (Custom styling with Inter font)
 - **Python Version:** 3.13.0
 - **Authentication:** Django built-in authentication system
+- **File Storage:** Django FileField with local storage
+
+---
+
+## 💻 System Requirements
+
+### Minimum Requirements
+- **Python:** 3.13.0 or higher
+- **pip:** Latest version
+- **Git:** For version control
+- **Operating System:** Windows, macOS, or Linux
+- **RAM:** 2GB minimum
+- **Storage:** 500MB free space
+
+### Recommended
+- **Python:** 3.13.0
+- **Virtual Environment:** venv or virtualenv
+- **Code Editor:** VS Code, PyCharm, or similar
+- **Browser:** Chrome, Firefox, Edge (latest versions)
 
 ---
 
@@ -800,6 +880,68 @@ python manage.py runserver
 
 ---
 
+## 🚀 Quick Start Guide
+
+### First Time Setup
+
+1. **Run the test data script** (if not already done):
+```bash
+python create_comprehensive_test_data.py
+```
+
+2. **Login with test credentials**:
+- Navigate to http://127.0.0.1:8000/login/
+- Use any of the test accounts (see Default Credentials below)
+
+3. **Explore the platform**:
+- **Admin:** Full system access, manage all departments and projects
+- **Department Head:** Manage your department's projects and team
+- **Project Lead:** Create projects and manage tasks
+- **Member:** View assigned tasks and participate in projects
+
+### Test Credentials
+
+All users login with: `workspace_code` + `username` + `password`
+
+| Role | Workspace | Username | Password | Access Level |
+|------|-----------|----------|----------|--------------|
+| Admin | CS | admin | admin123 | Full system access |
+| Dept Head | CS | dept_head | dept123 | Department management |
+| Project Lead | CS | project_lead | lead123 | Project creation & management |
+| Member | CS | member_cs | member123 | Task participation |
+| Member | MECH | member_mech | member123 | Task participation |
+
+### Common Tasks
+
+**Create a Project:**
+1. Login as admin, dept_head, or project_lead
+2. Click "Create Project" button
+3. Fill in project details
+4. Assign team members
+5. Set deadline and save
+
+**Create a Task:**
+1. Navigate to a project
+2. Click "View All Tasks"
+3. Click "Create Task" button
+4. Fill in task details
+5. Assign to team member
+6. Set priority and deadline
+
+**Send a Message:**
+1. Navigate to a project
+2. Click "Open Chat" button
+3. Type your message
+4. Optionally attach a file
+5. Click "Send Message"
+
+**Update Task Status:**
+1. Navigate to a task
+2. Select new status (Pending/In Progress/Completed)
+3. Click "Update Status"
+
+---
+
 ## 📖 Usage Guide
 
 ### For Administrators
@@ -1296,35 +1438,38 @@ TEMPLATES = [{
 
 ## 🐛 Known Issues
 
-None at this time. All Phase 1-5 features are working as expected.
+None at this time. All Phase 1-8 features are working as expected.
 
 ---
 
 ## 🚀 Future Enhancements
 
-- Task management views and forms
-- User profile pages
-- Project/task creation and editing forms
-- Real-time notifications
-- File upload for tasks and messages
-- Advanced search and filtering
+- User profile pages with avatar upload
+- Real-time notifications system
+- Advanced search and filtering across all modules
 - Activity logs and audit trails
-- Email notifications
-- Export functionality (PDF, Excel)
-- Calendar view for deadlines
-- Gantt charts for projects
+- Email notifications for task assignments and deadlines
+- Export functionality (PDF, Excel) for reports
+- Calendar view for project and task deadlines
+- Gantt charts for project timeline visualization
 - Real-time chat with WebSockets
 - Mobile app integration
-- API documentation
-- Performance optimization
+- REST API for external integrations
+- API documentation with Swagger/OpenAPI
+- Performance optimization and caching
+- Advanced analytics and reporting dashboards
+- Two-factor authentication (2FA)
+- Password reset functionality
+- Dark mode theme option
 
 ---
 
 ## 👥 Contributors
 
-- **Piyush288a** - Initial development and Phases 1-3
+- **Piyush288a** - Initial development, Phases 1-3, Phase 6-8
+- **SmitBhalanii** - Phase 5.1 implementation (Departments & Projects Views)
 - **Darshan-Dalsaniya** - Phases 4-5 implementation
-- Email: dalsaniyadarshan122@gmail.com
+- Email: piyush288a@gmail.com
 - GitHub: https://github.com/Piyush288a/NexuSphere
 
 ---
@@ -1348,10 +1493,11 @@ For issues or questions:
 - Django Documentation
 - Bootstrap Documentation
 - Python Community
+- Google Fonts (Inter)
 
 ---
 
-**Last Updated:** March 8, 2026  
+**Last Updated:** March 9, 2026  
 **Version:** 1.8.0 (Phase 8 Complete)  
 **Django Version:** 6.0.1  
 **Python Version:** 3.13.0
