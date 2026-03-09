@@ -906,10 +906,16 @@ All users login with: `workspace_code` + `username` + `password`
 | Role | Workspace | Username | Password | Access Level |
 |------|-----------|----------|----------|--------------|
 | Admin | CS | admin | admin123 | Full system access |
-| Dept Head | CS | dept_head | dept123 | Department management |
-| Project Lead | CS | project_lead | lead123 | Project creation & management |
-| Member | CS | member_cs | member123 | Task participation |
-| Member | MECH | member_mech | member123 | Task participation |
+| Dept Head (CS) | CS | dept_head_cs | dept123 | CS Department management |
+| Dept Head (MECH) | MECH | dept_head_mech | dept123 | MECH Department management |
+| Project Lead (CS) | CS | project_lead_1 | lead123 | CS Project management |
+| Project Lead (MECH) | MECH | project_lead_2 | lead123 | MECH Project management |
+| Member (CS-1) | CS | member_cs_1 | member123 | Task participation |
+| Member (CS-2) | CS | member_cs_2 | member123 | Task participation |
+| Member (MECH-1) | MECH | member_mech_1 | member123 | Task participation |
+| Member (MECH-2) | MECH | member_mech_2 | member123 | Task participation |
+
+**Note:** For complete test credentials and scenarios, see `TEST_CREDENTIALS.md`
 
 ### Common Tasks
 
@@ -1018,41 +1024,77 @@ All test users use workspace-based login (workspace_code + username + password):
 - **Redirect:** `/admin-dashboard/`
 - **Access:** Full system access, superuser privileges
 
-**Department Head:**
+**Department Head (Computer Science):**
 - **Workspace Code:** `CS`
-- **Username:** `dept_head`
+- **Username:** `dept_head_cs`
 - **Password:** `dept123`
 - **Role:** Department Head
 - **Department:** Computer Science
 - **Redirect:** `/department-dashboard/`
-- **Access:** Department management
+- **Access:** CS Department management
 
-**Project Lead:**
+**Department Head (Mechanical):**
+- **Workspace Code:** `MECH`
+- **Username:** `dept_head_mech`
+- **Password:** `dept123`
+- **Role:** Department Head
+- **Department:** Mechanical
+- **Redirect:** `/department-dashboard/`
+- **Access:** MECH Department management
+
+**Project Lead (Computer Science):**
 - **Workspace Code:** `CS`
-- **Username:** `project_lead`
+- **Username:** `project_lead_1`
 - **Password:** `lead123`
 - **Role:** Project Lead
 - **Department:** Computer Science
 - **Redirect:** `/project-dashboard/`
-- **Access:** Project management, leads 2 projects
+- **Access:** CS Project management
 
-**Member (Computer Science):**
+**Project Lead (Mechanical):**
+- **Workspace Code:** `MECH`
+- **Username:** `project_lead_2`
+- **Password:** `lead123`
+- **Role:** Project Lead
+- **Department:** Mechanical
+- **Redirect:** `/project-dashboard/`
+- **Access:** MECH Project management
+
+**Member (Computer Science - 1):**
 - **Workspace Code:** `CS`
-- **Username:** `member_cs`
+- **Username:** `member_cs_1`
 - **Password:** `member123`
 - **Role:** Member
 - **Department:** Computer Science
 - **Redirect:** `/dashboard/`
-- **Access:** Basic access, assigned to 3 tasks
+- **Access:** Basic access, task participation
 
-**Member (Mechanical):**
+**Member (Computer Science - 2):**
+- **Workspace Code:** `CS`
+- **Username:** `member_cs_2`
+- **Password:** `member123`
+- **Role:** Member
+- **Department:** Computer Science
+- **Redirect:** `/dashboard/`
+- **Access:** Basic access, task participation
+
+**Member (Mechanical - 1):**
 - **Workspace Code:** `MECH`
-- **Username:** `member_mech`
+- **Username:** `member_mech_1`
 - **Password:** `member123`
 - **Role:** Member
 - **Department:** Mechanical
 - **Redirect:** `/dashboard/`
-- **Access:** Basic access
+- **Access:** Basic access, task participation
+
+**Member (Mechanical - 2):**
+- **Workspace Code:** `MECH`
+- **Username:** `member_mech_2`
+- **Password:** `member123`
+- **Role:** Member
+- **Department:** Mechanical
+- **Redirect:** `/dashboard/`
+- **Access:** Basic access, task participation
 
 #### Test Login Scenarios
 

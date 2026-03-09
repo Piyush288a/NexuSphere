@@ -19,38 +19,72 @@
 - **Expected Redirect:** `/admin-dashboard/`
 - **Permissions:** Full system access, superuser
 
-### 2. Department Head
+### 2. Department Head (Computer Science)
 - **Workspace Code:** `CS`
-- **Username:** `dept_head`
+- **Username:** `dept_head_cs`
 - **Password:** `dept123`
 - **Role:** Department Head
 - **Department:** Computer Science
 - **Expected Redirect:** `/department-dashboard/`
 - **Permissions:** Department management
 
-### 3. Project Lead
+### 3. Department Head (Mechanical)
+- **Workspace Code:** `MECH`
+- **Username:** `dept_head_mech`
+- **Password:** `dept123`
+- **Role:** Department Head
+- **Department:** Mechanical
+- **Expected Redirect:** `/department-dashboard/`
+- **Permissions:** Department management
+
+### 4. Project Lead (Computer Science)
 - **Workspace Code:** `CS`
-- **Username:** `project_lead`
+- **Username:** `project_lead_1`
 - **Password:** `lead123`
 - **Role:** Project Lead
 - **Department:** Computer Science
 - **Expected Redirect:** `/project-dashboard/`
 - **Permissions:** Project management
-- **Projects:** AI Attendance System, Student Portal Redesign
 
-### 4. Member (Computer Science)
+### 5. Project Lead (Mechanical)
+- **Workspace Code:** `MECH`
+- **Username:** `project_lead_2`
+- **Password:** `lead123`
+- **Role:** Project Lead
+- **Department:** Mechanical
+- **Expected Redirect:** `/project-dashboard/`
+- **Permissions:** Project management
+
+### 6. Member (Computer Science - 1)
 - **Workspace Code:** `CS`
-- **Username:** `member_cs`
+- **Username:** `member_cs_1`
 - **Password:** `member123`
 - **Role:** Member
 - **Department:** Computer Science
 - **Expected Redirect:** `/dashboard/`
 - **Permissions:** Basic access
-- **Assigned Tasks:** 3 tasks
 
-### 5. Member (Mechanical)
+### 7. Member (Computer Science - 2)
+- **Workspace Code:** `CS`
+- **Username:** `member_cs_2`
+- **Password:** `member123`
+- **Role:** Member
+- **Department:** Computer Science
+- **Expected Redirect:** `/dashboard/`
+- **Permissions:** Basic access
+
+### 8. Member (Mechanical - 1)
 - **Workspace Code:** `MECH`
-- **Username:** `member_mech`
+- **Username:** `member_mech_1`
+- **Password:** `member123`
+- **Role:** Member
+- **Department:** Mechanical
+- **Expected Redirect:** `/dashboard/`
+- **Permissions:** Basic access
+
+### 9. Member (Mechanical - 2)
+- **Workspace Code:** `MECH`
+- **Username:** `member_mech_2`
 - **Password:** `member123`
 - **Role:** Member
 - **Department:** Mechanical
@@ -71,33 +105,57 @@ Password: admin123
 Expected: Redirect to /admin-dashboard/
 ```
 
-#### Test 2: Department Head Login
+#### Test 2: Department Head (CS) Login
 ```
 Workspace: CS
-Username: dept_head
+Username: dept_head_cs
 Password: dept123
 Expected: Redirect to /department-dashboard/
 ```
 
-#### Test 3: Project Lead Login
+#### Test 3: Department Head (MECH) Login
+```
+Workspace: MECH
+Username: dept_head_mech
+Password: dept123
+Expected: Redirect to /department-dashboard/
+```
+
+#### Test 4: Project Lead (CS) Login
 ```
 Workspace: CS
-Username: project_lead
+Username: project_lead_1
 Password: lead123
 Expected: Redirect to /project-dashboard/
 ```
 
-#### Test 4: Member Login
+#### Test 5: Project Lead (MECH) Login
+```
+Workspace: MECH
+Username: project_lead_2
+Password: lead123
+Expected: Redirect to /project-dashboard/
+```
+
+#### Test 6: Member (CS) Login
 ```
 Workspace: CS
-Username: member_cs
+Username: member_cs_1
+Password: member123
+Expected: Redirect to /dashboard/
+```
+
+#### Test 7: Member (MECH) Login
+```
+Workspace: MECH
+Username: member_mech_1
 Password: member123
 Expected: Redirect to /dashboard/
 ```
 
 ### ❌ Invalid Login Tests
 
-#### Test 5: Invalid Workspace
+#### Test 8: Invalid Workspace
 ```
 Workspace: INVALID
 Username: admin
@@ -105,7 +163,7 @@ Password: admin123
 Expected Error: "Workspace not found."
 ```
 
-#### Test 6: Invalid Credentials
+#### Test 9: Invalid Credentials
 ```
 Workspace: CS
 Username: admin
@@ -113,7 +171,7 @@ Password: wrongpassword
 Expected Error: "Invalid username or password."
 ```
 
-#### Test 7: Wrong Workspace for User
+#### Test 10: Wrong Workspace for User
 ```
 Workspace: MECH
 Username: admin
@@ -127,60 +185,20 @@ Expected Error: "Invalid workspace for this user."
 
 ### Departments
 1. **Computer Science** (Workspace: CS)
-   - Department Head: dept_head
-   - Members: 4 users
+   - Department Head: dept_head_cs
+   - Members: 5 users (1 admin, 1 dept_head, 1 project_lead, 2 members)
 
 2. **Mechanical** (Workspace: MECH)
-   - Department Head: Not assigned
-   - Members: 1 user
+   - Department Head: dept_head_mech
+   - Members: 4 users (1 dept_head, 1 project_lead, 2 members)
 
 ### Projects
 
-#### 1. AI Attendance System
-- **Department:** Computer Science
-- **Project Lead:** project_lead
-- **Members:** project_lead, member_cs
-- **Deadline:** 90 days from today
-- **Description:** Develop an AI-powered attendance tracking system using facial recognition
-- **Tasks:** 3 tasks
-- **Messages:** 2 messages
-
-#### 2. Student Portal Redesign
-- **Department:** Computer Science
-- **Project Lead:** project_lead
-- **Members:** member_cs
-- **Deadline:** 60 days from today
-- **Description:** Modernize the student portal with improved UI/UX
-- **Tasks:** 1 task
-- **Messages:** 1 message
+Projects can be created by admin, department heads, and project leads through the web interface.
 
 ### Tasks
 
-#### Project: AI Attendance System
-1. **Build Login UI**
-   - Assigned to: member_cs
-   - Status: Pending
-   - Priority: Medium
-   - Deadline: 14 days
-
-2. **Setup Database Schema**
-   - Assigned to: project_lead
-   - Status: In Progress
-   - Priority: High
-   - Deadline: 7 days
-
-3. **Implement Facial Recognition**
-   - Assigned to: member_cs
-   - Status: Pending
-   - Priority: High
-   - Deadline: 30 days
-
-#### Project: Student Portal Redesign
-4. **Design Dashboard Mockups**
-   - Assigned to: member_cs
-   - Status: Completed
-   - Priority: Medium
-   - Deadline: 10 days
+Tasks can be created within projects and assigned to team members.
 
 ---
 
@@ -188,9 +206,12 @@ Expected Error: "Invalid workspace for this user."
 
 ### Authentication Tests
 - [ ] Login with admin credentials
-- [ ] Login with dept_head credentials
-- [ ] Login with project_lead credentials
-- [ ] Login with member credentials
+- [ ] Login with dept_head_cs credentials
+- [ ] Login with dept_head_mech credentials
+- [ ] Login with project_lead_1 credentials
+- [ ] Login with project_lead_2 credentials
+- [ ] Login with member_cs_1 credentials
+- [ ] Login with member_mech_1 credentials
 - [ ] Test invalid workspace error
 - [ ] Test invalid credentials error
 - [ ] Test wrong workspace error
@@ -204,12 +225,12 @@ Expected Error: "Invalid workspace for this user."
 - [ ] Member redirects to /dashboard/
 
 ### Dashboard Tests
-- [ ] Admin dashboard displays user info
-- [ ] Department dashboard displays user info
-- [ ] Project dashboard displays user info
-- [ ] Member dashboard shows statistics
-- [ ] Member dashboard shows assigned tasks
-- [ ] Member dashboard shows recent projects
+- [ ] Admin dashboard displays system statistics
+- [ ] Department dashboard displays department data
+- [ ] Project dashboard displays led projects
+- [ ] Member dashboard shows personal tasks
+- [ ] Member dashboard shows assigned projects
+- [ ] Member dashboard shows upcoming deadlines
 
 ### Admin Panel Tests
 - [ ] Access admin panel with admin credentials
@@ -226,10 +247,10 @@ Expected Error: "Invalid workspace for this user."
 ## Database Statistics
 
 - **Departments:** 2
-- **Users:** 5
-- **Projects:** 2
-- **Tasks:** 4
-- **Messages:** 3
+- **Users:** 9
+- **Projects:** Created via web interface
+- **Tasks:** Created via web interface
+- **Messages:** Created via web interface
 
 ---
 
@@ -240,9 +261,9 @@ Expected Error: "Invalid workspace for this user."
 python manage.py runserver
 ```
 
-### Create Test Data
+### Check Current Users
 ```bash
-python create_comprehensive_test_data.py
+python check_users.py
 ```
 
 ### Access Admin Panel
@@ -259,11 +280,11 @@ Password: admin123
 
 - All passwords are set to simple values for testing purposes
 - In production, use strong passwords and proper security measures
-- Test data can be regenerated by running `create_comprehensive_test_data.py`
-- The script clears existing test data before creating new records
 - Workspace codes are case-sensitive (CS, MECH)
+- Each department now has its own department head and project lead
+- Multiple members per department for better testing scenarios
 
 ---
 
-**Last Updated:** March 8, 2026  
-**System Status:** ✅ All test data created successfully
+**Last Updated:** March 9, 2026  
+**System Status:** ✅ All users configured successfully
