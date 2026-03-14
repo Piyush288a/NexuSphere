@@ -156,10 +156,27 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="{% url 'dashboard' %}" class="navbar-brand">NexuSphere</a>
+        {% if user.role == 'admin' %}
+            <a href="{% url 'admin_dashboard' %}" class="navbar-brand">NexuSphere</a>
+        {% elif user.role == 'dept_head' %}
+            <a href="{% url 'department_dashboard' %}" class="navbar-brand">NexuSphere</a>
+        {% elif user.role == 'project_lead' %}
+            <a href="{% url 'project_dashboard' %}" class="navbar-brand">NexuSphere</a>
+        {% else %}
+            <a href="{% url 'dashboard' %}" class="navbar-brand">NexuSphere</a>
+        {% endif %}
+        
         <div class="navbar-menu">
             <ul class="navbar-links">
-                <li><a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>Dashboard</a></li>
+                {% if user.role == 'admin' %}
+                    <li><a href="{% url 'admin_dashboard' %}" {% if request.resolver_match.url_name == 'admin_dashboard' %}class="active"{% endif %}>Dashboard</a></li>
+                {% elif user.role == 'dept_head' %}
+                    <li><a href="{% url 'department_dashboard' %}" {% if request.resolver_match.url_name == 'department_dashboard' %}class="active"{% endif %}>Dashboard</a></li>
+                {% elif user.role == 'project_lead' %}
+                    <li><a href="{% url 'project_dashboard' %}" {% if request.resolver_match.url_name == 'project_dashboard' %}class="active"{% endif %}>Dashboard</a></li>
+                {% else %}
+                    <li><a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>Dashboard</a></li>
+                {% endif %}
                 <li><a href="{% url 'departments_list' %}" {% if 'departments' in request.path %}class="active"{% endif %}>Departments</a></li>
                 <li><a href="{% url 'projects_list' %}" {% if 'projects' in request.path %}class="active"{% endif %}>Projects</a></li>
             </ul>
