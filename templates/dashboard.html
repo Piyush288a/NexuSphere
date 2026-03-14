@@ -1,531 +1,148 @@
 {% extends 'base.html' %}
 
 {% block title %}Dashboard - NexuSphere{% endblock %}
-
-{% block extra_css %}
-<style>
-    .page-header {
-        margin-bottom: 32px;
-    }
-    
-    .page-title {
-        font-size: 32px;
-        font-weight: 700;
-        color: #2C2C2C;
-        margin-bottom: 8px;
-    }
-    
-    .page-subtitle {
-        font-size: 16px;
-        color: #4A4A4A;
-    }
-    
-    /* Statistics Cards */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
-        margin-bottom: 32px;
-    }
-    
-    .stat-card {
-        background: #FFFFFF;
-        border-radius: 12px;
-        border: 2px solid #E8E4DC;
-        padding: 24px;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, #8B7355 0%, #2C2C2C 100%);
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(44, 44, 44, 0.12);
-    }
-    
-    .stat-label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #4A4A4A;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 12px;
-    }
-    
-    .stat-value {
-        font-size: 36px;
-        font-weight: 700;
-        color: #2C2C2C;
-    }
-    
-    /* Quick Actions */
-    .quick-actions {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 32px;
-        flex-wrap: wrap;
-    }
-    
-    .action-btn {
-        padding: 12px 24px;
-        background: linear-gradient(135deg, #8B7355 0%, #2C2C2C 100%);
-        color: white;
-        border-radius: 8px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-        border: none;
-        cursor: pointer;
-    }
-    
-    .action-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(44, 44, 44, 0.2);
-        color: white;
-    }
-    
-    /* Content Sections */
-    .content-section {
-        background: #FFFFFF;
-        border-radius: 12px;
-        border: 2px solid #E8E4DC;
-        padding: 24px;
-        margin-bottom: 24px;
-    }
-    
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #F5F1E8;
-    }
-    
-    .section-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #2C2C2C;
-    }
-    
-    .section-badge {
-        padding: 6px 12px;
-        background: #F5F1E8;
-        border-radius: 6px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #8B7355;
-    }
-    
-    /* Task Items */
-    .task-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .task-item {
-        padding: 16px;
-        background: #F5F1E8;
-        border-radius: 8px;
-        border-left: 4px solid #8B7355;
-        transition: all 0.3s ease;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 16px;
-    }
-    
-    .task-item:hover {
-        background: #E8E4DC;
-        transform: translateX(4px);
-    }
-    
-    .task-info {
-        flex: 1;
-    }
-    
-    .task-title {
-        font-size: 15px;
-        font-weight: 600;
-        color: #2C2C2C;
-        margin-bottom: 6px;
-    }
-    
-    .task-meta {
-        font-size: 13px;
-        color: #4A4A4A;
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-    
-    .task-meta-item {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-    
-    .task-badges {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        flex-shrink: 0;
-    }
-    
-    .task-status {
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        white-space: nowrap;
-    }
-    
-    .status-pending {
-        background: #E8E4DC;
-        color: #4A4A4A;
-    }
-    
-    .status-inprogress {
-        background: #8B7355;
-        color: white;
-    }
-    
-    .status-completed {
-        background: #2C2C2C;
-        color: white;
-    }
-    
-    .priority-badge {
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-    
-    .priority-low {
-        background: #E8E4DC;
-        color: #4A4A4A;
-    }
-    
-    .priority-medium {
-        background: #FFC107;
-        color: #2C2C2C;
-    }
-    
-    .priority-high {
-        background: #DC3545;
-        color: white;
-    }
-    
-    /* Project Cards */
-    .projects-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-    }
-    
-    .project-card {
-        background: #F5F1E8;
-        border-radius: 12px;
-        border: 2px solid #E8E4DC;
-        padding: 20px;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .project-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, #8B7355 0%, #2C2C2C 100%);
-    }
-    
-    .project-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 20px rgba(44, 44, 44, 0.1);
-        border-color: #8B7355;
-    }
-    
-    .project-name {
-        font-size: 16px;
-        font-weight: 700;
-        color: #2C2C2C;
-        margin-bottom: 8px;
-    }
-    
-    .project-dept {
-        font-size: 13px;
-        color: #4A4A4A;
-        margin-bottom: 12px;
-    }
-    
-    .project-progress {
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 1px solid #E8E4DC;
-    }
-    
-    .progress-label {
-        font-size: 12px;
-        color: #4A4A4A;
-        margin-bottom: 8px;
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .progress-bar-container {
-        width: 100%;
-        height: 8px;
-        background: #E8E4DC;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-    
-    .progress-bar {
-        height: 100%;
-        background: linear-gradient(90deg, #8B7355 0%, #2C2C2C 100%);
-        border-radius: 4px;
-        transition: width 0.3s ease;
-    }
-    
-    .project-link {
-        display: inline-block;
-        margin-top: 12px;
-        color: #8B7355;
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 600;
-        transition: color 0.3s ease;
-    }
-    
-    .project-link:hover {
-        color: #2C2C2C;
-    }
-    
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: #4A4A4A;
-    }
-    
-    .empty-state-icon {
-        font-size: 48px;
-        margin-bottom: 16px;
-        opacity: 0.5;
-    }
-    
-    .empty-state-text {
-        font-size: 16px;
-        margin-bottom: 8px;
-    }
-    
-    .empty-state-subtext {
-        font-size: 14px;
-        color: #6C757D;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .page-title {
-            font-size: 24px;
-        }
-        
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .projects-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .task-item {
-            flex-direction: column;
-        }
-        
-        .task-badges {
-            align-self: flex-start;
-        }
-    }
-</style>
-{% endblock %}
+{% block page_title %}My Dashboard{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1 class="page-title">My Dashboard</h1>
-    <p class="page-subtitle">Welcome back, {{ user.username }}! Here's your work overview.</p>
-</div>
+<div class="max-w-6xl mx-auto">
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">Welcome back, {{ user.username }}</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Here's your work overview</p>
+    </div>
 
-<!-- Task Statistics -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-label">Total Tasks</div>
-        <div class="stat-value">{{ total_tasks }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Completed</div>
-        <div class="stat-value">{{ completed_tasks }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">In Progress</div>
-        <div class="stat-value">{{ inprogress_tasks }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Pending</div>
-        <div class="stat-value">{{ pending_tasks }}</div>
-    </div>
-</div>
-
-<!-- Quick Actions -->
-<div class="quick-actions">
-    <a href="{% url 'projects_list' %}" class="action-btn">
-        <span>📁</span> View Projects
-    </a>
-    <a href="{% url 'departments_list' %}" class="action-btn">
-        <span>🏢</span> View Departments
-    </a>
-</div>
-
-<!-- Upcoming Deadlines -->
-<div class="content-section">
-    <div class="section-header">
-        <h2 class="section-title">Upcoming Deadlines</h2>
-        <span class="section-badge">{{ upcoming_deadlines|length }} task{{ upcoming_deadlines|length|pluralize }}</span>
-    </div>
-    
-    {% if upcoming_deadlines %}
-    <div class="task-list">
-        {% for task in upcoming_deadlines %}
-        <div class="task-item">
-            <div class="task-info">
-                <div class="task-title">{{ task.title }}</div>
-                <div class="task-meta">
-                    <span class="task-meta-item">
-                        <span>📁</span> {{ task.project.project_name }}
-                    </span>
-                    <span class="task-meta-item">
-                        <span>📅</span> {{ task.deadline }}
-                    </span>
-                </div>
-            </div>
-            <div class="task-badges">
-                <span class="priority-badge priority-{{ task.priority|lower }}">{{ task.priority }}</span>
-                <span class="task-status status-{{ task.status|lower|cut:' ' }}">{{ task.status }}</span>
-            </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 hover:shadow-soft transition-shadow">
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Total Tasks</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ total_tasks }}</p>
         </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="empty-state">
-        <div class="empty-state-icon">✅</div>
-        <p class="empty-state-text">No upcoming deadlines</p>
-        <p class="empty-state-subtext">You're all caught up!</p>
-    </div>
-    {% endif %}
-</div>
-
-<!-- My Recent Tasks -->
-<div class="content-section">
-    <div class="section-header">
-        <h2 class="section-title">My Recent Tasks</h2>
-        <span class="section-badge">{{ recent_tasks|length }} task{{ recent_tasks|length|pluralize }}</span>
-    </div>
-    
-    {% if recent_tasks %}
-    <div class="task-list">
-        {% for task in recent_tasks %}
-        <div class="task-item">
-            <div class="task-info">
-                <div class="task-title">{{ task.title }}</div>
-                <div class="task-meta">
-                    <span class="task-meta-item">
-                        <span>📁</span> {{ task.project.project_name }}
-                    </span>
-                    <span class="task-meta-item">
-                        <span>📅</span> Due: {{ task.deadline }}
-                    </span>
-                </div>
-            </div>
-            <div class="task-badges">
-                <span class="priority-badge priority-{{ task.priority|lower }}">{{ task.priority }}</span>
-                <span class="task-status status-{{ task.status|lower|cut:' ' }}">{{ task.status }}</span>
-            </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 hover:shadow-soft transition-shadow">
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Completed</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ completed_tasks }}</p>
         </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="empty-state">
-        <div class="empty-state-icon">📋</div>
-        <p class="empty-state-text">No tasks assigned yet</p>
-        <p class="empty-state-subtext">Tasks will appear here when assigned to you</p>
-    </div>
-    {% endif %}
-</div>
-
-<!-- My Projects -->
-<div class="content-section">
-    <div class="section-header">
-        <h2 class="section-title">My Projects</h2>
-        <span class="section-badge">{{ projects_count }} project{{ projects_count|pluralize }}</span>
-    </div>
-    
-    {% if my_projects %}
-    <div class="projects-grid">
-        {% for item in my_projects %}
-        <div class="project-card">
-            <div class="project-name">{{ item.project.project_name }}</div>
-            <div class="project-dept">{{ item.project.department.department_name }}</div>
-            <div class="task-meta">
-                <span class="task-meta-item">
-                    <span>👤</span> {{ item.project.project_lead.username }}
-                </span>
-                <span class="task-meta-item">
-                    <span>📅</span> {{ item.project.deadline }}
-                </span>
-            </div>
-            
-            <div class="project-progress">
-                <div class="progress-label">
-                    <span>Task Progress</span>
-                    <span><strong>{{ item.completed_tasks }}</strong> / {{ item.total_tasks }}</span>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: {{ item.progress_percentage }}%"></div>
-                </div>
-            </div>
-            
-            <a href="{% url 'project_detail' item.project.id %}" class="project-link">View Project →</a>
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 hover:shadow-soft transition-shadow">
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">In Progress</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ inprogress_tasks }}</p>
         </div>
-        {% endfor %}
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 hover:shadow-soft transition-shadow">
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Pending</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ pending_tasks }}</p>
+        </div>
     </div>
-    {% else %}
-    <div class="empty-state">
-        <div class="empty-state-icon">📁</div>
-        <p class="empty-state-text">No projects yet</p>
-        <p class="empty-state-subtext">You'll see projects here when you're added as a member or lead</p>
+
+    <div class="flex flex-wrap gap-3 mb-8">
+        <a href="{% url 'projects_list' %}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+            View Projects
+        </a>
+        <a href="{% url 'departments_list' %}" class="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            View Departments
+        </a>
     </div>
-    {% endif %}
+
+    <div class="space-y-6">
+        <section class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-soft">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
+                <h3 class="font-semibold text-gray-900 dark:text-white">Upcoming Deadlines</h3>
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-slate-700 px-2.5 py-1 rounded-md">{{ upcoming_deadlines|length }} task{{ upcoming_deadlines|length|pluralize }}</span>
+            </div>
+            <div class="p-6">
+                {% if upcoming_deadlines %}
+                <div class="space-y-3">
+                    {% for task in upcoming_deadlines %}
+                    <div class="flex items-center justify-between py-3 px-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 border-l-2 border-gray-400 dark:border-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700/50 transition-colors">
+                        <div>
+                            <p class="font-medium text-gray-900 dark:text-white">{{ task.title }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ task.project.project_name }} · Due {{ task.deadline }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 text-xs font-medium rounded bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-300">{{ task.priority }}</span>
+                            <span class="px-2 py-0.5 text-xs font-medium rounded
+                                {% if task.status == 'Completed' %}bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300
+                                {% elif task.status == 'In Progress' %}bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300
+                                {% else %}bg-gray-100 dark:bg-slate-600 text-gray-700 dark:text-gray-300{% endif %}">{{ task.status }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                    <p class="font-medium text-gray-700 dark:text-gray-300">No upcoming deadlines</p>
+                    <p class="text-sm mt-1">You're all caught up!</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-soft">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
+                <h3 class="font-semibold text-gray-900 dark:text-white">My Recent Tasks</h3>
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-slate-700 px-2.5 py-1 rounded-md">{{ recent_tasks|length }} task{{ recent_tasks|length|pluralize }}</span>
+            </div>
+            <div class="p-6">
+                {% if recent_tasks %}
+                <div class="space-y-3">
+                    {% for task in recent_tasks %}
+                    <div class="flex items-center justify-between py-3 px-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 border-l-2 border-gray-400 dark:border-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700/50 transition-colors">
+                        <div>
+                            <p class="font-medium text-gray-900 dark:text-white">{{ task.title }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ task.project.project_name }} · Due {{ task.deadline }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 text-xs font-medium rounded
+                                {% if task.priority == 'High' %}bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300
+                                {% elif task.priority == 'Medium' %}bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300
+                                {% else %}bg-gray-100 dark:bg-slate-600 text-gray-700 dark:text-gray-300{% endif %}">{{ task.priority }}</span>
+                            <span class="px-2 py-0.5 text-xs font-medium rounded
+                                {% if task.status == 'Completed' %}bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300
+                                {% elif task.status == 'In Progress' %}bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300
+                                {% else %}bg-gray-100 dark:bg-slate-600 text-gray-700 dark:text-gray-300{% endif %}">{{ task.status }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                    <p class="font-medium text-gray-700 dark:text-gray-300">No tasks assigned yet</p>
+                    <p class="text-sm mt-1">Tasks will appear here when assigned to you</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-soft">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
+                <h3 class="font-semibold text-gray-900 dark:text-white">My Projects</h3>
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-slate-700 px-2.5 py-1 rounded-md">{{ projects_count }} project{{ projects_count|pluralize }}</span>
+            </div>
+            <div class="p-6">
+                {% if my_projects %}
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for item in my_projects %}
+                    <a href="{% url 'project_detail' item.project.id %}" class="block p-5 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600 hover:shadow-soft transition-all group">
+                        <p class="font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{{ item.project.project_name }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ item.project.department.department_name }} · {{ item.project.project_lead.username }}</p>
+                        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
+                            <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1.5">
+                                <span>Progress</span>
+                                <span>{{ item.completed_tasks }}/{{ item.total_tasks }}</span>
+                            </div>
+                            <div class="h-1.5 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gray-900 dark:bg-indigo-500 rounded-full transition-all" style="width: {{ item.progress_percentage }}%"></div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-indigo-600 dark:text-indigo-400 font-medium mt-2">View project →</p>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                    <p class="font-medium text-gray-700 dark:text-gray-300">No projects yet</p>
+                    <p class="text-sm mt-1">You'll see projects here when added as a member or lead</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
 </div>
 {% endblock %}

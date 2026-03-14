@@ -1,348 +1,68 @@
 {% extends 'base.html' %}
 
 {% block title %}Chat - {{ project.project_name }} - NexuSphere{% endblock %}
-
-{% block extra_css %}
-<style>
-    .chat-container {
-        max-width: 1000px;
-        margin: 0 auto;
-    }
-    
-    .chat-header {
-        background: #FFFFFF;
-        border-radius: 12px;
-        border: 2px solid #E8E4DC;
-        padding: 24px;
-        margin-bottom: 24px;
-    }
-    
-    .chat-title {
-        font-size: 28px;
-        font-weight: 700;
-        color: #2C2C2C;
-        margin-bottom: 8px;
-    }
-    
-    .chat-subtitle {
-        font-size: 14px;
-        color: #4A4A4A;
-    }
-    
-    .project-badge {
-        display: inline-block;
-        padding: 6px 16px;
-        background: #F5F1E8;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #8B7355;
-        margin-top: 12px;
-    }
-    
-    .messages-section {
-        background: #FFFFFF;
-        border-radius: 12px;
-        border: 2px solid #E8E4DC;
-        padding: 24px;
-        margin-bottom: 24px;
-        min-height: 400px;
-        max-height: 600px;
-        overflow-y: auto;
-    }
-    
-    .messages-list {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-    
-    .message-card {
-        background: #F5F1E8;
-        border-radius: 12px;
-        border: 1px solid #E8E4DC;
-        padding: 16px;
-        transition: all 0.3s ease;
-    }
-    
-    .message-card:hover {
-        box-shadow: 0 2px 8px rgba(44, 44, 44, 0.08);
-    }
-    
-    .message-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #E8E4DC;
-    }
-    
-    .message-sender {
-        font-size: 14px;
-        font-weight: 700;
-        color: #2C2C2C;
-    }
-    
-    .message-time {
-        font-size: 12px;
-        color: #4A4A4A;
-    }
-    
-    .message-text {
-        font-size: 15px;
-        line-height: 1.6;
-        color: #2C2C2C;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        margin-bottom: 12px;
-    }
-    
-    .message-attachment {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 16px;
-        background: #FFFFFF;
-        border-radius: 8px;
-        border: 1px solid #E8E4DC;
-        text-decoration: none;
-        color: #8B7355;
-        font-size: 13px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .message-attachment:hover {
-        background: #8B7355;
-        color: white;
-        transform: translateY(-2px);
-    }
-    
-    .message-attachment::before {
-        content: '📎';
-        font-size: 16px;
-    }
-    
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: #4A4A4A;
-    }
-    
-    .empty-state-icon {
-        font-size: 48px;
-        margin-bottom: 16px;
-        opacity: 0.5;
-    }
-    
-    .empty-state-text {
-        font-size: 16px;
-    }
-    
-    .message-form-section {
-        background: #FFFFFF;
-        border-radius: 12px;
-        border: 2px solid #E8E4DC;
-        padding: 24px;
-    }
-    
-    .form-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #2C2C2C;
-        margin-bottom: 20px;
-    }
-    
-    .form-group {
-        margin-bottom: 20px;
-    }
-    
-    .form-label {
-        display: block;
-        font-size: 14px;
-        font-weight: 600;
-        color: #2C2C2C;
-        margin-bottom: 8px;
-    }
-    
-    .form-textarea {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #E8E4DC;
-        border-radius: 8px;
-        font-size: 14px;
-        font-family: 'Inter', sans-serif;
-        color: #2C2C2C;
-        background: #FFFFFF;
-        transition: all 0.3s ease;
-        resize: vertical;
-    }
-    
-    .form-textarea:focus {
-        outline: none;
-        border-color: #8B7355;
-        box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
-    }
-    
-    .form-file {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #E8E4DC;
-        border-radius: 8px;
-        font-size: 14px;
-        font-family: 'Inter', sans-serif;
-        color: #2C2C2C;
-        background: #FFFFFF;
-        transition: all 0.3s ease;
-    }
-    
-    .form-file:focus {
-        outline: none;
-        border-color: #8B7355;
-        box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
-    }
-    
-    .form-help {
-        font-size: 13px;
-        color: #4A4A4A;
-        margin-top: 6px;
-        font-style: italic;
-    }
-    
-    .btn {
-        padding: 12px 32px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        transition: all 0.3s ease;
-        border: none;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #8B7355 0%, #2C2C2C 100%);
-        color: white;
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(44, 44, 44, 0.2);
-    }
-    
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: #4A4A4A;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        margin-bottom: 24px;
-        transition: color 0.3s ease;
-    }
-    
-    .back-link:hover {
-        color: #8B7355;
-    }
-    
-    .back-link::before {
-        content: '←';
-        font-size: 18px;
-    }
-    
-    @media (max-width: 768px) {
-        .chat-title {
-            font-size: 22px;
-        }
-        
-        .messages-section {
-            max-height: 400px;
-        }
-        
-        .message-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 4px;
-        }
-    }
-</style>
-{% endblock %}
+{% block page_title %}Project Chat{% endblock %}
 
 {% block content %}
-<div class="chat-container">
-    <a href="{% url 'project_detail' project.id %}" class="back-link">Back to Project</a>
-    
-    <div class="chat-header">
-        <h1 class="chat-title">Project Chat</h1>
-        <p class="chat-subtitle">{{ project.project_name }}</p>
-        <span class="project-badge">{{ message_count }} message{{ message_count|pluralize }}</span>
+<div class="max-w-4xl mx-auto">
+    <a href="{% url 'project_detail' project.id %}" class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white dark:hover:text-white mb-6 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Project
+    </a>
+
+    <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4 mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ project.project_name }}</h2>
+        <span class="inline-block mt-2 px-2.5 py-1 text-xs font-medium rounded bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300">{{ message_count }} message{{ message_count|pluralize }}</span>
     </div>
-    
-    <div class="messages-section">
-        {% if chat_messages %}
-        <div class="messages-list">
-            {% for message in chat_messages %}
-            <div class="message-card">
-                <div class="message-header">
-                    <span class="message-sender">{{ message.sender.username }}</span>
-                    <span class="message-time">{{ message.created_at|date:"M d, Y - g:i A" }}</span>
+
+    <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden mb-6">
+        <div class="p-6 min-h-[400px] max-h-[500px] overflow-y-auto">
+            {% if chat_messages %}
+            <div class="space-y-4">
+                {% for message in chat_messages %}
+                <div class="p-4 rounded-xl bg-gray-50 dark:bg-slate-700/30 border border-gray-200 dark:border-slate-700">
+                    <div class="flex justify-between items-center mb-2 pb-2 border-b border-gray-200 dark:border-slate-700">
+                        <span class="font-medium text-gray-900 dark:text-white">{{ message.sender.username }}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ message.created_at|date:"M d, Y - g:i A" }}</span>
+                    </div>
+                    <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ message.message_text }}</p>
+                    {% if message.file_attachment %}
+                    <a href="{{ message.file_attachment.url }}" target="_blank" class="inline-flex items-center gap-2 mt-2 px-3 py-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-indigo-500 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                        {{ message.file_attachment.name|slice:"11:" }}
+                    </a>
+                    {% endif %}
                 </div>
-                <div class="message-text">{{ message.message_text }}</div>
-                {% if message.file_attachment %}
-                <a href="{{ message.file_attachment.url }}" target="_blank" class="message-attachment">
-                    {{ message.file_attachment.name|slice:"11:" }}
-                </a>
-                {% endif %}
+                {% endfor %}
             </div>
-            {% endfor %}
+            {% else %}
+            <div class="text-center py-16 text-gray-500 dark:text-gray-400">
+                <p class="font-medium text-gray-700">No messages yet</p>
+                <p class="text-sm mt-1">Start the conversation!</p>
+            </div>
+            {% endif %}
         </div>
-        {% else %}
-        <div class="empty-state">
-            <div class="empty-state-icon">💬</div>
-            <p class="empty-state-text">No messages yet. Start the conversation!</p>
-        </div>
-        {% endif %}
     </div>
-    
-    <div class="message-form-section">
-        <h2 class="form-title">Send Message</h2>
-        <form method="post" enctype="multipart/form-data">
+
+    <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+        <h3 class="font-semibold text-gray-900 dark:text-white mb-4">Send Message</h3>
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
-            
-            <div class="form-group">
-                <label for="{{ form.message_text.id_for_label }}" class="form-label">
-                    {{ form.message_text.label }}
-                </label>
+            <div>
+                <label for="{{ form.message_text.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1.5">Message</label>
                 {{ form.message_text }}
-                {% if form.message_text.errors %}
-                    <div style="color: #DC3545; font-size: 13px; margin-top: 6px;">
-                        {% for error in form.message_text.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                {% for error in form.message_text.errors %}
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ error }}</p>
+                {% endfor %}
             </div>
-            
-            <div class="form-group">
-                <label for="{{ form.file_attachment.id_for_label }}" class="form-label">
-                    {{ form.file_attachment.label }}
-                </label>
+            <div>
+                <label for="{{ form.file_attachment.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1.5">Attachment (optional)</label>
                 {{ form.file_attachment }}
-                <p class="form-help">You can attach a file to your message (optional)</p>
-                {% if form.file_attachment.errors %}
-                    <div style="color: #DC3545; font-size: 13px; margin-top: 6px;">
-                        {% for error in form.file_attachment.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                {% for error in form.file_attachment.errors %}
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ error }}</p>
+                {% endfor %}
             </div>
-            
-            <button type="submit" class="btn btn-primary">Send Message</button>
+            <button type="submit" class="px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors">Send Message</button>
         </form>
     </div>
 </div>

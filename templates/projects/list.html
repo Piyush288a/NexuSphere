@@ -1,189 +1,53 @@
 {% extends 'base.html' %}
 
 {% block title %}Projects - NexuSphere{% endblock %}
-
-{% block extra_css %}
-<style>
-    .btn-create {
-        padding: 12px 24px;
-        background: linear-gradient(135deg, #8B7355 0%, #2C2C2C 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-create:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(44, 44, 44, 0.2);
-    }
-    
-    .projects-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        gap: 24px;
-        margin-top: 24px;
-    }
-    
-    .project-card {
-        background: #FFFFFF;
-        border-radius: 12px;
-        border: 2px solid #E8E4DC;
-        padding: 24px;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: inherit;
-        display: block;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .project-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, #8B7355 0%, #2C2C2C 100%);
-    }
-    
-    .project-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(44, 44, 44, 0.12);
-        border-color: #8B7355;
-    }
-    
-    .project-header {
-        margin-bottom: 20px;
-    }
-    
-    .project-name {
-        font-size: 20px;
-        font-weight: 700;
-        color: #2C2C2C;
-        margin-bottom: 8px;
-    }
-    
-    .project-dept {
-        font-size: 13px;
-        color: #8B7355;
-        font-weight: 600;
-    }
-    
-    .project-info {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .project-info-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 14px;
-    }
-    
-    .project-label {
-        color: #4A4A4A;
-        font-weight: 500;
-    }
-    
-    .project-value {
-        color: #2C2C2C;
-        font-weight: 600;
-    }
-    
-    .project-deadline {
-        padding: 4px 12px;
-        background: #F5F1E8;
-        border-radius: 6px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #2C2C2C;
-    }
-    
-    .empty-state {
-        text-align: center;
-        padding: 80px 20px;
-        background: #FFFFFF;
-        border-radius: 12px;
-        border: 2px solid #E8E4DC;
-    }
-    
-    .empty-state-icon {
-        font-size: 64px;
-        margin-bottom: 20px;
-        opacity: 0.5;
-    }
-    
-    .empty-state-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #2C2C2C;
-        margin-bottom: 8px;
-    }
-    
-    .empty-state-text {
-        color: #4A4A4A;
-    }
-</style>
-{% endblock %}
+{% block page_title %}Projects{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+<div class="max-w-6xl mx-auto">
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="page-title">Projects</h1>
-            <p class="page-subtitle">View and manage your projects</p>
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">Projects</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">View and manage your projects</p>
         </div>
         {% if user.role == 'admin' or user.role == 'dept_head' or user.role == 'project_lead' %}
-        <a href="{% url 'project_create' %}" class="btn-create">
-            <span style="font-size: 18px; margin-right: 4px;">+</span> Create Project
+        <a href="{% url 'project_create' %}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors self-start sm:self-auto">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Create Project
         </a>
         {% endif %}
     </div>
-</div>
 
-{% if projects %}
-<div class="projects-grid">
-    {% for project in projects %}
-    <a href="{% url 'project_detail' project.id %}" class="project-card">
-        <div class="project-header">
-            <h3 class="project-name">{{ project.project_name }}</h3>
-            <p class="project-dept">{{ project.department.department_name }}</p>
-        </div>
-        
-        <div class="project-info">
-            <div class="project-info-item">
-                <span class="project-label">Project Lead:</span>
-                <span class="project-value">
-                    {{ project.project_lead.username|default:"Not assigned" }}
-                </span>
+    {% if projects %}
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for project in projects %}
+        <a href="{% url 'project_detail' project.id %}" class="block p-5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600 hover:shadow-soft transition-all group">
+            <div class="border-l-2 border-gray-900 dark:border-indigo-500 pl-4">
+                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{{ project.project_name }}</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ project.department.department_name }}</p>
             </div>
-            <div class="project-info-item">
-                <span class="project-label">Deadline:</span>
-                <span class="project-deadline">{{ project.deadline }}</span>
+            <div class="mt-4 space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-gray-500 dark:text-gray-400">Lead</span>
+                    <span class="font-medium text-gray-900 dark:text-white">{{ project.project_lead.username|default:"—" }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500 dark:text-gray-400">Deadline</span>
+                    <span class="px-2 py-0.5 text-xs font-medium rounded-md bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300">{{ project.deadline }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500 dark:text-gray-400">Members</span>
+                    <span class="font-medium text-gray-900 dark:text-white">{{ project.members_count }}</span>
+                </div>
             </div>
-            <div class="project-info-item">
-                <span class="project-label">Members:</span>
-                <span class="project-value">{{ project.members_count }}</span>
-            </div>
-        </div>
-    </a>
-    {% endfor %}
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-16 text-center">
+        <p class="font-medium text-gray-900 dark:text-white">No Projects Found</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">You don't have access to any projects yet.</p>
+    </div>
+    {% endif %}
 </div>
-{% else %}
-<div class="empty-state">
-    <div class="empty-state-icon">📂</div>
-    <h3 class="empty-state-title">No Projects Found</h3>
-    <p class="empty-state-text">You don't have access to any projects yet.</p>
-</div>
-{% endif %}
 {% endblock %}

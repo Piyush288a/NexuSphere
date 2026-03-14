@@ -4,191 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}NexuSphere{% endblock %}</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('nexusphere-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (theme === 'dark' || (!theme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        sidebar: { DEFAULT: '#0d1117', hover: '#161b22' },
+                        'content-bg': { light: '#f8fafc', dark: '#0f172a' }
+                    },
+                    boxShadow: {
+                        'soft': '0 1px 3px 0 rgb(0 0 0 / 0.05)',
+                        'soft-lg': '0 4px 6px -1px rgb(0 0 0 / 0.04)',
+                        'soft-xl': '0 10px 15px -3px rgb(0 0 0 / 0.04)'
+                    },
+                    transitionDuration: { '250': '250ms' }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+        .form-input, .form-textarea, .form-select, .form-select-multiple, .form-file {
+            width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem;
+            border: 1px solid #e5e7eb; background: #fff; color: #111827;
+            transition: border-color 0.15s, box-shadow 0.15s, background-color 0.2s, border-color 0.2s;
         }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #F5F1E8;
-            min-height: 100vh;
+        .dark .form-input, .dark .form-textarea, .dark .form-select, .dark .form-select-multiple, .dark .form-file {
+            border-color: #374151; background: #1f2937; color: #f9fafb;
         }
-        
-        .navbar {
-            background: #FFFFFF;
-            border-bottom: 2px solid #E8E4DC;
-            padding: 16px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(44, 44, 44, 0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        .form-input:focus, .form-textarea:focus, .form-select:focus, .form-select-multiple:focus, .form-file:focus {
+            outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
-        
-        .navbar-brand {
-            font-size: 22px;
-            font-weight: 700;
-            color: #2C2C2C;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .navbar-brand::before {
-            content: '◆';
-            font-size: 20px;
-            color: #8B7355;
-        }
-        
-        .navbar-menu {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
-        
-        .navbar-links {
-            display: flex;
-            gap: 24px;
-            list-style: none;
-        }
-        
-        .navbar-links a {
-            color: #4A4A4A;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-        
-        .navbar-links a:hover {
-            color: #8B7355;
-        }
-        
-        .navbar-links a.active {
-            color: #2C2C2C;
-            font-weight: 600;
-        }
-        
-        .navbar-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .user-info {
-            font-size: 14px;
-            color: #4A4A4A;
-            font-weight: 500;
-        }
-        
-        .btn-logout {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #8B7355 0%, #2C2C2C 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-logout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(44, 44, 44, 0.2);
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 32px;
-        }
-        
-        .page-header {
-            margin-bottom: 32px;
-        }
-        
-        .page-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #2C2C2C;
-            margin-bottom: 8px;
-        }
-        
-        .page-subtitle {
-            font-size: 16px;
-            color: #4A4A4A;
-        }
-        
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 16px 20px;
-            }
-            
-            .navbar-menu {
-                gap: 16px;
-            }
-            
-            .navbar-links {
-                gap: 16px;
-            }
-            
-            .container {
-                padding: 24px 20px;
-            }
-            
-            .page-title {
-                font-size: 24px;
-            }
-        }
-        
-        {% block extra_css %}{% endblock %}
+        .dark .form-input:focus, .dark .form-textarea:focus, .dark .form-select:focus { border-color: #818cf8; }
+        .form-textarea { min-height: 100px; resize: vertical; }
+        .form-select-multiple { min-height: 120px; }
     </style>
+    {% block extra_css %}{% endblock %}
 </head>
-<body>
-    <nav class="navbar">
-        {% if user.role == 'admin' %}
-            <a href="{% url 'admin_dashboard' %}" class="navbar-brand">NexuSphere</a>
-        {% elif user.role == 'dept_head' %}
-            <a href="{% url 'department_dashboard' %}" class="navbar-brand">NexuSphere</a>
-        {% elif user.role == 'project_lead' %}
-            <a href="{% url 'project_dashboard' %}" class="navbar-brand">NexuSphere</a>
-        {% else %}
-            <a href="{% url 'dashboard' %}" class="navbar-brand">NexuSphere</a>
-        {% endif %}
-        
-        <div class="navbar-menu">
-            <ul class="navbar-links">
-                {% if user.role == 'admin' %}
-                    <li><a href="{% url 'admin_dashboard' %}" {% if request.resolver_match.url_name == 'admin_dashboard' %}class="active"{% endif %}>Dashboard</a></li>
-                {% elif user.role == 'dept_head' %}
-                    <li><a href="{% url 'department_dashboard' %}" {% if request.resolver_match.url_name == 'department_dashboard' %}class="active"{% endif %}>Dashboard</a></li>
-                {% elif user.role == 'project_lead' %}
-                    <li><a href="{% url 'project_dashboard' %}" {% if request.resolver_match.url_name == 'project_dashboard' %}class="active"{% endif %}>Dashboard</a></li>
-                {% else %}
-                    <li><a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>Dashboard</a></li>
-                {% endif %}
-                <li><a href="{% url 'departments_list' %}" {% if 'departments' in request.path %}class="active"{% endif %}>Departments</a></li>
-                <li><a href="{% url 'projects_list' %}" {% if 'projects' in request.path %}class="active"{% endif %}>Projects</a></li>
-            </ul>
+<body class="font-sans antialiased min-h-screen flex transition-colors duration-200 bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100">
+    <!-- Sidebar - always dark in both themes -->
+    <aside class="fixed left-0 top-0 h-full w-60 bg-slate-900 flex flex-col z-50 lg:flex hidden border-r border-white/5">
+        <div class="p-5 border-b border-white/5">
+            <a href="{% if user.role == 'admin' %}{% url 'admin_dashboard' %}{% elif user.role == 'dept_head' %}{% url 'department_dashboard' %}{% elif user.role == 'project_lead' %}{% url 'project_dashboard' %}{% else %}{% url 'dashboard' %}{% endif %}" 
+               class="flex items-center gap-2.5 text-white font-semibold text-[17px] tracking-tight hover:opacity-90 transition-opacity">
+                <span class="w-8 h-8 rounded-lg bg-indigo-500/90 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </span>
+                NexuSphere
+            </a>
         </div>
-        <div class="navbar-right">
-            <span class="user-info">{{ user.username }} ({{ user.role }})</span>
-            <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
+        <nav class="flex-1 py-5 px-3 space-y-0.5 overflow-y-auto">
+            <a href="{% if user.role == 'admin' %}{% url 'admin_dashboard' %}{% elif user.role == 'dept_head' %}{% url 'department_dashboard' %}{% elif user.role == 'project_lead' %}{% url 'project_dashboard' %}{% else %}{% url 'dashboard' %}{% endif %}" 
+               class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150
+                      {% if 'dashboard' in request.path %}bg-white/10 text-white{% else %}text-gray-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+                Dashboard
+            </a>
+            <a href="{% url 'departments_list' %}" 
+               class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150
+                      {% if 'departments' in request.path %}bg-white/10 text-white{% else %}text-gray-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                Departments
+            </a>
+            <a href="{% url 'projects_list' %}" 
+               class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150
+                      {% if '/projects' in request.path %}bg-white/10 text-white{% else %}text-gray-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+                </svg>
+                Projects
+            </a>
+        </nav>
+        <div class="p-4 border-t border-white/5">
+            <div class="flex items-center gap-3 px-3 py-2">
+                <div class="w-9 h-9 rounded-full bg-indigo-500/80 flex items-center justify-center text-white text-sm font-medium shrink-0">
+                    {{ user.username|slice:":1"|upper }}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-white truncate">{{ user.username }}</p>
+                    <p class="text-xs text-gray-500 capitalize">{{ user.role|default:"Member" }}</p>
+                </div>
+            </div>
+            <a href="{% url 'logout' %}" class="flex items-center gap-3 px-3 py-2.5 mt-1 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-white/[0.06] transition-all duration-150">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                </svg>
+                Logout
+            </a>
         </div>
-    </nav>
-    
-    <div class="container">
-        {% block content %}{% endblock %}
+    </aside>
+
+    <!-- Mobile sidebar -->
+    <div class="fixed top-4 left-4 z-40 lg:hidden">
+        <button type="button" onclick="document.getElementById('mobile-sidebar').classList.toggle('hidden')" 
+                class="p-2.5 rounded-lg bg-slate-800 text-white hover:bg-slate-700 transition-colors shadow-soft">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
     </div>
+    <div id="mobile-sidebar" class="fixed inset-0 z-40 lg:hidden hidden">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('mobile-sidebar').classList.add('hidden')"></div>
+        <aside class="fixed left-0 top-0 h-full w-64 bg-slate-900 flex flex-col z-50 border-r border-white/5">
+            <div class="p-5 border-b border-white/5 flex justify-between items-center">
+                <span class="text-white font-semibold">NexuSphere</span>
+                <button onclick="document.getElementById('mobile-sidebar').classList.add('hidden')" class="p-2 text-gray-400 hover:text-white rounded-md hover:bg-white/5 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <nav class="flex-1 py-4 px-3 space-y-0.5">
+                <a href="{% if user.role == 'admin' %}{% url 'admin_dashboard' %}{% elif user.role == 'dept_head' %}{% url 'department_dashboard' %}{% elif user.role == 'project_lead' %}{% url 'project_dashboard' %}{% else %}{% url 'dashboard' %}{% endif %}" class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">Dashboard</a>
+                <a href="{% url 'departments_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">Departments</a>
+                <a href="{% url 'projects_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">Projects</a>
+            </nav>
+            <div class="p-4 border-t border-white/5">
+                <p class="text-sm text-white font-medium">{{ user.username }}</p>
+                <a href="{% url 'logout' %}" class="text-sm text-gray-400 hover:text-white mt-2 block transition-colors">Logout</a>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col min-h-screen lg:ml-60">
+        <header class="sticky top-0 z-30 flex items-center justify-between h-14 px-4 lg:px-8 
+                        bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-700/50">
+            <h1 class="text-lg font-semibold text-gray-900 dark:text-white tracking-tight">{% block page_title %}NexuSphere{% endblock %}</h1>
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:block relative">
+                    <input type="search" placeholder="Search..." 
+                           class="w-56 lg:w-64 pl-9 pr-4 py-2 text-sm rounded-lg 
+                                  bg-gray-100 dark:bg-slate-800 border-0 
+                                  text-gray-900 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400
+                                  focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:ring-inset">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                <button id="theme-toggle" type="button" aria-label="Toggle theme"
+                        class="p-2.5 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 
+                               hover:bg-gray-100 dark:hover:bg-slate-700/50 transition-colors">
+                    <svg id="theme-icon-light" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 p-4 lg:p-8 bg-gray-50 dark:bg-slate-900">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('nexusphere-theme', isDark ? 'dark' : 'light');
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -1,321 +1,73 @@
 {% extends 'base.html' %}
 
 {% block title %}{{ task.title }} - NexuSphere{% endblock %}
-
-{% block extra_css %}
-<style>
-    .task-container {
-        max-width: 900px;
-        margin: 0 auto;
-    }
-    
-    .task-header {
-        background: #FFFFFF;
-        border-radius: 12px;
-        border: 2px solid #E8E4DC;
-        padding: 32px;
-        margin-bottom: 24px;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .task-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, #8B7355 0%, #2C2C2C 100%);
-    }
-    
-    .task-title {
-        font-size: 32px;
-        font-weight: 700;
-        color: #2C2C2C;
-        margin-bottom: 16px;
-    }
-    
-    .task-badges {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-bottom: 24px;
-    }
-    
-    .badge {
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    .status-pending {
-        background: #E8E4DC;
-        color: #4A4A4A;
-    }
-    
-    .status-inprogress {
-        background: #0DCAF0;
-        color: white;
-    }
-    
-    .status-completed {
-        background: #198754;
-        color: white;
-    }
-    
-    .priority-low {
-        background: #6C757D;
-        color: white;
-    }
-    
-    .priority-medium {
-        background: #FFC107;
-        color: #2C2C2C;
-    }
-    
-    .priority-high {
-        background: #DC3545;
-        color: white;
-    }
-    
-    .task-meta {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-    }
-    
-    .meta-item {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-    
-    .meta-label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #4A4A4A;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    .meta-value {
-        font-size: 16px;
-        font-weight: 600;
-        color: #2C2C2C;
-    }
-    
-    .meta-link {
-        color: #8B7355;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-    
-    .meta-link:hover {
-        color: #2C2C2C;
-    }
-    
-    .task-section {
-        background: #FFFFFF;
-        border-radius: 12px;
-        border: 2px solid #E8E4DC;
-        padding: 32px;
-        margin-bottom: 24px;
-    }
-    
-    .section-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #2C2C2C;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #F5F1E8;
-    }
-    
-    .task-description {
-        font-size: 15px;
-        line-height: 1.6;
-        color: #4A4A4A;
-        white-space: pre-wrap;
-    }
-    
-    .status-update-form {
-        display: flex;
-        gap: 16px;
-        align-items: end;
-    }
-    
-    .form-group {
-        flex: 1;
-        margin: 0;
-    }
-    
-    .form-label {
-        display: block;
-        font-size: 14px;
-        font-weight: 600;
-        color: #2C2C2C;
-        margin-bottom: 8px;
-    }
-    
-    .form-select {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #E8E4DC;
-        border-radius: 8px;
-        font-size: 14px;
-        font-family: 'Inter', sans-serif;
-        color: #2C2C2C;
-        background: #FFFFFF;
-        transition: all 0.3s ease;
-    }
-    
-    .form-select:focus {
-        outline: none;
-        border-color: #8B7355;
-        box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
-    }
-    
-    .btn {
-        padding: 12px 32px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        transition: all 0.3s ease;
-        border: none;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #8B7355 0%, #2C2C2C 100%);
-        color: white;
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(44, 44, 44, 0.2);
-    }
-    
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: #4A4A4A;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        margin-bottom: 24px;
-        transition: color 0.3s ease;
-    }
-    
-    .back-link:hover {
-        color: #8B7355;
-    }
-    
-    .back-link::before {
-        content: '←';
-        font-size: 18px;
-    }
-    
-    .info-message {
-        background: #F5F1E8;
-        border: 2px solid #E8E4DC;
-        border-radius: 8px;
-        padding: 16px;
-        color: #4A4A4A;
-        font-size: 14px;
-        margin-bottom: 16px;
-    }
-    
-    @media (max-width: 768px) {
-        .task-header {
-            padding: 24px;
-        }
-        
-        .task-title {
-            font-size: 24px;
-        }
-        
-        .task-meta {
-            grid-template-columns: 1fr;
-        }
-        
-        .status-update-form {
-            flex-direction: column;
-            align-items: stretch;
-        }
-        
-        .btn {
-            width: 100%;
-            text-align: center;
-        }
-    }
-</style>
-{% endblock %}
+{% block page_title %}{{ task.title }}{% endblock %}
 
 {% block content %}
-<div class="task-container">
-    <a href="{% url 'task_list' task.project.id %}" class="back-link">Back to Tasks</a>
-    
-    <div class="task-header">
-        <h1 class="task-title">{{ task.title }}</h1>
-        
-        <div class="task-badges">
-            <span class="badge status-{{ task.status|lower|cut:' ' }}">{{ task.status }}</span>
-            <span class="badge priority-{{ task.priority|lower }}">{{ task.priority }}</span>
-        </div>
-        
-        <div class="task-meta">
-            <div class="meta-item">
-                <span class="meta-label">Project</span>
-                <a href="{% url 'project_detail' task.project.id %}" class="meta-value meta-link">
-                    {{ task.project.project_name }}
-                </a>
+<div class="max-w-3xl mx-auto">
+    <a href="{% url 'task_list' task.project.id %}" class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Tasks
+    </a>
+
+    <div class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden mb-6">
+        <div class="border-l-4 border-gray-900 dark:border-indigo-500 p-6 lg:p-8">
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-2.5 py-1 text-xs font-medium rounded
+                    {% if task.status == 'Completed' %}bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300
+                    {% elif task.status == 'In Progress' %}bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300
+                    {% else %}bg-gray-100 text-gray-700 dark:text-gray-300{% endif %}">{{ task.status }}</span>
+                <span class="px-2.5 py-1 text-xs font-medium rounded
+                    {% if task.priority == 'High' %}bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300
+                    {% elif task.priority == 'Medium' %}bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300
+                    {% else %}bg-gray-100 text-gray-700 dark:text-gray-300{% endif %}">{{ task.priority }}</span>
             </div>
-            <div class="meta-item">
-                <span class="meta-label">Assigned To</span>
-                <span class="meta-value">{{ task.assigned_to.username|default:"Unassigned" }}</span>
-            </div>
-            <div class="meta-item">
-                <span class="meta-label">Deadline</span>
-                <span class="meta-value">{{ task.deadline }}</span>
-            </div>
-            <div class="meta-item">
-                <span class="meta-label">Created</span>
-                <span class="meta-value">{{ task.created_at|date:"M d, Y" }}</span>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                <div>
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Project</p>
+                    <a href="{% url 'project_detail' task.project.id %}" class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium mt-0.5 block">{{ task.project.project_name }}</a>
+                </div>
+                <div>
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Assigned To</p>
+                    <p class="font-medium text-gray-900 dark:text-white mt-0.5">{{ task.assigned_to.username|default:"—" }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Deadline</p>
+                    <p class="font-medium text-gray-900 dark:text-white mt-0.5">{{ task.deadline }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created</p>
+                    <p class="font-medium text-gray-900 dark:text-white mt-0.5">{{ task.created_at|date:"M d, Y" }}</p>
+                </div>
             </div>
         </div>
     </div>
-    
-    <div class="task-section">
-        <h2 class="section-title">Description</h2>
-        <p class="task-description">{{ task.description }}</p>
+
+    <div class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6 mb-6">
+        <h3 class="font-semibold text-gray-900 dark:text-white mb-3">Description</h3>
+        <p class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap text-sm leading-relaxed">{{ task.description }}</p>
     </div>
-    
+
     {% if can_update_status %}
-    <div class="task-section">
-        <h2 class="section-title">Update Status</h2>
-        <form method="post" action="{% url 'task_update_status' task.id %}" class="status-update-form">
+    <div class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6">
+        <h3 class="font-semibold text-gray-900 dark:text-white mb-4">Update Status</h3>
+        <form method="post" action="{% url 'task_update_status' task.id %}" class="flex flex-col sm:flex-row gap-4">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="id_status" class="form-label">Status</label>
+            <div class="flex-1">
+                <label for="id_status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Status</label>
                 <select name="status" id="id_status" class="form-select">
                     <option value="Pending" {% if task.status == 'Pending' %}selected{% endif %}>Pending</option>
                     <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
                     <option value="Completed" {% if task.status == 'Completed' %}selected{% endif %}>Completed</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Update Status</button>
+            <div class="sm:pt-7">
+                <button type="submit" class="px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">Update Status</button>
+            </div>
         </form>
     </div>
     {% else %}
-    <div class="info-message">
+    <div class="p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 border border-gray-200 dark:border-slate-700 text-sm text-gray-600 dark:text-gray-300">
         Only the assigned user or project lead can update the task status.
     </div>
     {% endif %}
