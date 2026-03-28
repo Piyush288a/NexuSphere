@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import Http404
+from django.http import HttpResponseForbidden
 from .models import Message
 from projects.models import Project
 from .forms import MessageForm
@@ -12,8 +12,8 @@ def project_chat(request, project_id):
     """Display project chat and handle message sending"""
     project = get_object_or_404(Project, id=project_id)
     user = request.user
-    
-    # Check access permissions
+
+    # Check access permissions — return 403 for unauthorized (PART 12)
     has_access = False
     if user.role == 'admin':
         has_access = True
@@ -21,11 +21,11 @@ def project_chat(request, project_id):
         has_access = True
     elif project.project_lead == user:
         has_access = True
-    elif user in project.members.all():
+    elif project.members.filter(pk=user.pk).exists():
         has_access = True
-    
+
     if not has_access:
-        raise Http404("You don't have permission to access this project's chat.")
+        return HttpResponseForbidden("You don't have permission to access this project's chat.")
     
     # Handle message submission
     if request.method == 'POST':

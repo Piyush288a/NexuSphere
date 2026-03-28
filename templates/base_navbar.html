@@ -89,7 +89,7 @@
     </a>
 
 {% else %}
-    <!-- Collaboration Navigation: Dashboard / My Projects / Tasks / Deadlines / Chat -->
+    <!-- Collaboration Navigation: Dashboard / My Projects / Tasks / Deadlines -->
     <a href="{% url 'dashboard' %}"
        class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
               {% if request.path == '/dashboard/' %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
@@ -122,5 +122,31 @@
         </svg>
         Deadlines
     </a>
+
+    <!-- ── Chats section (Slack-style channel list) ── -->
+    <div class="mt-4 pt-3 border-t border-white/[0.06]">
+        <p class="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-slate-500 select-none">
+            Chats
+        </p>
+
+        {% if chat_projects %}
+        {% load chat_tags %}
+        <div class="space-y-0.5 max-h-52 overflow-y-auto pr-0.5">
+            {% for proj in chat_projects %}
+            {% is_active_chat proj.id as active %}
+            <a href="/projects/{{ proj.id }}/chat/"
+               class="flex items-center gap-2 px-3 py-1.5 rounded-md text-[12.5px] font-medium
+                      transition-all duration-100 group
+                      {% if active %}bg-indigo-600/20 text-indigo-300{% else %}text-slate-400 hover:text-white hover:bg-white/[0.07]{% endif %}">
+                <span class="text-[11px] font-bold shrink-0
+                             {% if active %}text-indigo-400{% else %}text-slate-500 group-hover:text-slate-300{% endif %}">#</span>
+                <span class="truncate">{{ proj.project_name|lower }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="px-3 py-2 text-[12px] text-slate-600 italic">No chats available</p>
+        {% endif %}
+    </div>
 
 {% endif %}
