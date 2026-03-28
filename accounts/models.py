@@ -6,10 +6,10 @@ class User(AbstractUser):
         ('admin', 'Admin'),
         ('dept_head', 'Department Head'),
         ('project_lead', 'Project Lead'),
-        ('member', 'Member'),
+        ('collaboration', 'Collaboration'),
     ]
     
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='member')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='collaboration')
     department = models.ForeignKey('departments.Department', on_delete=models.SET_NULL, null=True, blank=True, related_name='users')
     
     def __str__(self):

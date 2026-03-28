@@ -31,17 +31,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'accounts',
     'departments',
     'projects',
     'tasks',
     'chat',
+    'analytics',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +75,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'nexusphere.wsgi.application'
+ASGI_APPLICATION = 'nexusphere.asgi.application'
+
+# Channel layers — in-memory for development (no Redis required)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 
 # Database

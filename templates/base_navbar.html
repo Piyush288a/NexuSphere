@@ -1,0 +1,126 @@
+<!-- Role-based Navigation -->
+{% if user.role == 'admin' %}
+    <!-- Admin Navigation: Dashboard / Departments / Projects / Analytics -->
+    <a href="{% url 'admin_dashboard' %}" 
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if 'admin-dashboard' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+        </svg>
+        Dashboard
+    </a>
+    <a href="{% url 'departments_list' %}" 
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if 'departments' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+        Departments
+    </a>
+    <a href="{% url 'proposal_list' %}" 
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if 'proposals' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        Proposals
+    </a>
+    <a href="{% url 'projects_list' %}" 
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if '/projects/' in request.path and 'proposals' not in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+        </svg>
+        Projects
+    </a>
+
+{% elif user.role == 'dept_head' %}
+    <!-- Dept Head Navigation: Dashboard / Departments / Projects -->
+    <a href="{% url 'department_dashboard' %}" 
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if 'department-dashboard' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+        </svg>
+        Dashboard
+    </a>
+    <a href="{% url 'departments_list' %}" 
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if 'departments' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+        Departments
+    </a>
+    <a href="{% url 'proposal_create' %}" 
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if 'proposal' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        Proposals
+    </a>
+    <a href="{% url 'projects_list' %}" 
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if '/projects/' in request.path and 'proposal' not in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+        </svg>
+        Projects
+    </a>
+
+{% elif user.role == 'project_lead' %}
+    <!-- Project Lead Navigation: Dashboard / Projects / Tasks -->
+    <a href="{% url 'project_dashboard' %}" 
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if 'project-dashboard' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+        </svg>
+        Dashboard
+    </a>
+    <a href="{% url 'projects_list' %}" 
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if '/projects/' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+        </svg>
+        Projects
+    </a>
+
+{% else %}
+    <!-- Collaboration Navigation: Dashboard / My Projects / Tasks / Deadlines / Chat -->
+    <a href="{% url 'dashboard' %}"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if request.path == '/dashboard/' %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+        </svg>
+        Dashboard
+    </a>
+    <a href="{% url 'my_projects' %}"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if 'my-projects' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+        </svg>
+        My Projects
+    </a>
+    <a href="{% url 'my_tasks' %}"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if 'my-tasks' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+        </svg>
+        Tasks
+    </a>
+    <a href="{% url 'my_deadlines' %}"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150
+              {% if 'my-deadlines' in request.path %}bg-white/[0.12] text-white{% else %}text-slate-400 hover:text-white hover:bg-white/[0.08]{% endif %}">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        Deadlines
+    </a>
+
+{% endif %}

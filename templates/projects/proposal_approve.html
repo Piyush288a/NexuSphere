@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Approve Proposal - NexuSphere{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="{% url 'proposal_detail' proposal.id %}" class="text-indigo-600 dark:text-indigo-400 hover:underline text-sm font-medium">
+            ← Back to Proposal
+        </a>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-soft-lg p-8 border border-gray-200 dark:border-slate-700">
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Approve Project Proposal</h1>
+            <p class="text-gray-600 dark:text-gray-400">Review and approve this proposal to create the project</p>
+        </div>
+
+        <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-semibold text-green-900 dark:text-green-100 mb-2">{{ proposal.title }}</h3>
+            <p class="text-green-800 dark:text-green-200 mb-4">{{ proposal.description|truncatewords:50 }}</p>
+            
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <span class="text-green-700 dark:text-green-300">Department:</span>
+                    <p class="font-semibold text-green-900 dark:text-green-100">{{ proposal.department.department_name }}</p>
+                </div>
+                <div>
+                    <span class="text-green-700 dark:text-green-300">Project Lead:</span>
+                    <p class="font-semibold text-green-900 dark:text-green-100">{{ proposal.proposed_project_lead.username }}</p>
+                </div>
+                <div>
+                    <span class="text-green-700 dark:text-green-300">Deadline:</span>
+                    <p class="font-semibold text-green-900 dark:text-green-100">{{ proposal.proposed_deadline|date:"M d, Y" }}</p>
+                </div>
+                <div>
+                    <span class="text-green-700 dark:text-green-300">Proposed By:</span>
+                    <p class="font-semibold text-green-900 dark:text-green-100">{{ proposal.proposed_by.username }}</p>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="admin_notes" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Admin Notes (Optional)
+                </label>
+                <textarea name="admin_notes" id="admin_notes" rows="4" 
+                    class="form-textarea"
+                    placeholder="Add any notes or comments about this approval..."></textarea>
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                    <strong>Note:</strong> Approving this proposal will automatically create a new project with the specified details. This action cannot be undone.
+                </p>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-150 shadow-sm">
+                    Confirm Approval
+                </button>
+                <a href="{% url 'proposal_detail' proposal.id %}" class="px-6 py-3 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-colors duration-150">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}Manage Team — {{ project.project_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+
+    <a href="{% url 'project_detail' project.id %}"
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-slate-400
+              hover:text-indigo-600 dark:hover:text-indigo-400 mb-6 transition-colors duration-150">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to {{ project.project_name }}
+    </a>
+
+    <!-- Header -->
+    <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-slate-100 tracking-tight">Manage Team</h1>
+        <p class="text-sm text-gray-600 dark:text-slate-400 mt-1">
+            Assign a project lead and team members for
+            <span class="font-medium text-gray-900 dark:text-white">{{ project.project_name }}</span>
+        </p>
+    </div>
+
+    <!-- Current team summary -->
+    <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800/40 rounded-xl p-5 mb-6">
+        <p class="text-xs font-semibold text-indigo-700 dark:text-indigo-300 uppercase tracking-wider mb-3">Current Team</p>
+        <div class="flex flex-wrap gap-4 text-sm">
+            <div>
+                <span class="text-indigo-600 dark:text-indigo-400 font-medium">Lead: </span>
+                <span class="text-gray-900 dark:text-white">{{ project.project_lead.username|default:"Not assigned" }}</span>
+            </div>
+            <div>
+                <span class="text-indigo-600 dark:text-indigo-400 font-medium">Members: </span>
+                <span class="text-gray-900 dark:text-white">
+                    {% if project.members.all %}
+                        {{ project.members.all|join:", " }}
+                    {% else %}
+                        None assigned
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700/80 shadow-linear p-8">
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="mb-6 p-4 rounded-lg
+                {% if message.tags == 'error' %}bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200
+                {% else %}bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        <div class="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Project Lead -->
+            <div>
+                <label for="{{ form.project_lead.id_for_label }}"
+                       class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Project Lead <span class="text-red-500">*</span>
+                </label>
+                {{ form.project_lead }}
+                {% if form.project_lead.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.project_lead.errors.0 }}</p>
+                {% endif %}
+                <p class="mt-1 text-xs text-gray-500 dark:text-slate-400">
+                    Only users from <strong>{{ project.department.department_name }}</strong> are shown.
+                    The selected lead will automatically be added to the members list.
+                </p>
+            </div>
+
+            <!-- Members -->
+            <div>
+                <label for="{{ form.members.id_for_label }}"
+                       class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Team Members
+                </label>
+                {{ form.members }}
+                {% if form.members.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.members.errors.0 }}</p>
+                {% endif %}
+                <p class="mt-1 text-xs text-gray-500 dark:text-slate-400">
+                    Hold <kbd class="px-1 py-0.5 rounded bg-gray-100 dark:bg-slate-700 text-xs font-mono">Ctrl</kbd>
+                    (or <kbd class="px-1 py-0.5 rounded bg-gray-100 dark:bg-slate-700 text-xs font-mono">⌘</kbd> on Mac)
+                    to select multiple members.
+                </p>
+            </div>
+
+            <!-- Department users reference -->
+            <div class="bg-gray-50 dark:bg-slate-800/50 rounded-lg p-4">
+                <p class="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-3">
+                    Available Users — {{ project.department.department_name }}
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    {% for u in dept_users %}
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium
+                                 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600
+                                 text-gray-700 dark:text-gray-300">
+                        {{ u.username }}
+                        <span class="text-gray-400 dark:text-slate-500">{{ u.role }}</span>
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-2">
+                <button type="submit"
+                        class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold
+                               rounded-lg transition-colors duration-150 shadow-sm focus:outline-none
+                               focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Save Team
+                </button>
+                <a href="{% url 'project_detail' project.id %}"
+                   class="px-6 py-2.5 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600
+                          text-gray-700 dark:text-gray-300 text-sm font-semibold rounded-lg transition-colors duration-150">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

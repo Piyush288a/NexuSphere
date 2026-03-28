@@ -11,6 +11,7 @@ urlpatterns = [
     path('departments/', include('departments.urls')),
     path('projects/', include('projects.urls')),
     path('tasks/', include('tasks.urls')),
+    path('api/analytics/', include('analytics.urls')),
     path('', include('accounts.urls')),
 ]
 

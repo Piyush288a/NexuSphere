@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
+from datetime import date
 from departments.models import Department
 from projects.models import Project
 from tasks.models import Task
@@ -64,7 +65,7 @@ def redirect_by_role(user):
         'admin': 'admin_dashboard',
         'dept_head': 'department_dashboard',
         'project_lead': 'project_dashboard',
-        'member': 'dashboard',
+        'collaboration': 'dashboard',
     }
     return redirect(role_redirects.get(user.role, 'dashboard'))
 
@@ -126,6 +127,8 @@ def dashboard(request):
 
 @login_required
 def admin_dashboard(request):
+    if request.user.role != 'admin':
+        return redirect_by_role(request.user)
     # Admin sees system-wide statistics
     total_departments = Department.objects.count()
     total_users = User.objects.count()
@@ -265,3 +268,53 @@ def project_dashboard(request):
         'recent_tasks': recent_tasks,
     }
     return render(request, 'dashboards/project_dashboard.html', context)
+
+
+@login_required
+def my_tasks(request):
+    """Collaboration: view all tasks assigned to the user across their projects."""
+    user = request.user
+    today = date.today()
+
+    tasks = Task.objects.filter(
+        assigned_to=user
+    ).select_related('project', 'project__department').order_by('deadline')
+
+    total      = tasks.count()
+    completed  = tasks.filter(status='Completed').count()
+    inprogress = tasks.filter(status='In Progress').count()
+    pending    = tasks.filter(status='Pending').count()
+    overdue    = tasks.filter(deadline__lt=today).exclude(status='Completed').count()
+
+    context = {
+        'tasks': tasks,
+        'total_tasks': total,
+        'completed_tasks': completed,
+        'inprogress_tasks': inprogress,
+        'pending_tasks': pending,
+        'overdue_tasks': overdue,
+    }
+    return render(request, 'collaboration/my_tasks.html', context)
+
+
+@login_required
+def my_deadlines(request):
+    """Collaboration: upcoming deadlines sorted by nearest due date."""
+    user = request.user
+    today = date.today()
+
+    upcoming = Task.objects.filter(
+        assigned_to=user
+    ).exclude(status='Completed').select_related(
+        'project', 'project__department'
+    ).order_by('deadline')
+
+    overdue = upcoming.filter(deadline__lt=today)
+    due_soon = upcoming.filter(deadline__gte=today)
+
+    context = {
+        'overdue_tasks': overdue,
+        'due_soon_tasks': due_soon,
+        'today': today,
+    }
+    return render(request, 'collaboration/my_deadlines.html', context)

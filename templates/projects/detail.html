@@ -40,21 +40,66 @@
 
     <div class="space-y-6">
         <section class="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700/80 overflow-hidden shadow-linear">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
                 <h3 class="font-semibold text-gray-900 dark:text-white">Team Members</h3>
+                {% if user.role == 'dept_head' and user.department == project.department %}
+                <a href="{% url 'manage_team' project.id %}"
+                   class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700
+                          text-white text-xs font-semibold rounded-lg transition-colors duration-150">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Manage Team
+                </a>
+                {% endif %}
             </div>
             <div class="p-6">
+                <!-- Project Lead highlight -->
+                {% if project.project_lead %}
+                <div class="flex items-center gap-3 p-4 rounded-lg bg-indigo-50 dark:bg-indigo-900/20
+                            border border-indigo-200 dark:border-indigo-800/40 mb-4">
+                    <div class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center shrink-0">
+                        <span class="text-white text-sm font-bold">{{ project.project_lead.username|first|upper }}</span>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm">{{ project.project_lead.username }}</p>
+                        <p class="text-xs text-indigo-600 dark:text-indigo-400 font-medium">Project Lead</p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 mb-4">
+                    <p class="text-sm text-amber-700 dark:text-amber-300 font-medium">No project lead assigned yet.</p>
+                    {% if user.role == 'dept_head' and user.department == project.department %}
+                    <a href="{% url 'manage_team' project.id %}" class="text-xs text-amber-600 dark:text-amber-400 underline mt-1 inline-block">
+                        Assign a project lead →
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+
                 {% if members %}
-                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {% for member in members %}
-                    <div class="p-4 rounded-lg border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/30">
-                        <p class="font-medium text-gray-900 dark:text-white">{{ member.username }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ member.get_role_display|default:member.role }}</p>
+                    <div class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/30">
+                        <div class="w-8 h-8 rounded-full bg-gray-300 dark:bg-slate-600 flex items-center justify-center shrink-0">
+                            <span class="text-gray-700 dark:text-white text-xs font-bold">{{ member.username|first|upper }}</span>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="font-medium text-gray-900 dark:text-white text-sm truncate">{{ member.username }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                {% if member == project.project_lead %}Lead{% else %}{{ member.role|title }}{% endif %}
+                            </p>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-gray-500 dark:text-gray-400 text-sm">No team members assigned yet.</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">No team members assigned yet.
+                    {% if user.role == 'dept_head' and user.department == project.department %}
+                    <a href="{% url 'manage_team' project.id %}" class="text-indigo-600 dark:text-indigo-400 underline">Add members →</a>
+                    {% endif %}
+                </p>
                 {% endif %}
             </div>
         </section>
